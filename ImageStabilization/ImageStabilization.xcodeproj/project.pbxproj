@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		90DB83091BA3D54C005CBB9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83081BA3D54C005CBB9C /* main.m */; };
 		90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830B1BA3D54C005CBB9C /* AppDelegate.m */; };
-		90DB830F1BA3D54C005CBB9C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830E1BA3D54C005CBB9C /* ViewController.m */; };
+		90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830E1BA3D54C005CBB9C /* ViewController.mm */; };
 		90DB83121BA3D54C005CBB9C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83101BA3D54C005CBB9C /* Main.storyboard */; };
 		90DB83141BA3D54C005CBB9C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83131BA3D54C005CBB9C /* Images.xcassets */; };
 		90DB83171BA3D54C005CBB9C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83151BA3D54C005CBB9C /* LaunchScreen.xib */; };
@@ -38,7 +38,7 @@
 		90DB830A1BA3D54C005CBB9C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		90DB830B1BA3D54C005CBB9C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		90DB830D1BA3D54C005CBB9C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		90DB830E1BA3D54C005CBB9C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		90DB830E1BA3D54C005CBB9C /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
 		90DB83111BA3D54C005CBB9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		90DB83131BA3D54C005CBB9C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		90DB83161BA3D54C005CBB9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 				90DB830A1BA3D54C005CBB9C /* AppDelegate.h */,
 				90DB830B1BA3D54C005CBB9C /* AppDelegate.m */,
 				90DB830D1BA3D54C005CBB9C /* ViewController.h */,
-				90DB830E1BA3D54C005CBB9C /* ViewController.m */,
+				90DB830E1BA3D54C005CBB9C /* ViewController.mm */,
 				90DB83321BA3F00B005CBB9C /* 1.jpg */,
 				90DB83331BA3F00B005CBB9C /* 2.jpg */,
 				90DB83101BA3D54C005CBB9C /* Main.storyboard */,
@@ -251,7 +251,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90DB830F1BA3D54C005CBB9C /* ViewController.m in Sources */,
+				90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */,
 				90DB83391BA3F304005CBB9C /* FeatureExtractor.mm in Sources */,
 				90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */,
 				90DB833C1BA3F371005CBB9C /* OpenCVUtils.mm in Sources */,
@@ -390,6 +390,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ImageStabilization/OpenCVPrefix.pch";
 				INFOPLIST_FILE = ImageStabilization/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -406,6 +407,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/ImageStabilization/OpenCVPrefix.pch";
 				INFOPLIST_FILE = ImageStabilization/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

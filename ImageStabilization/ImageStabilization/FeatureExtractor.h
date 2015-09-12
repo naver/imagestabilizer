@@ -7,8 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <opencv2/opencv.hpp>
 
+// Reference
+// 1. http://stackoverflow.com/questions/13423884/how-to-use-brisk-in-opencv
+// 2. http://docs.opencv.org/master/db/d70/tutorial_akaze_matching.html#gsc.tab=0
+
 @interface FeatureExtractor : NSObject
--(void) extractFeatureFromUIImage:(UIImage *)image;
+-(UIImage*) extractFeatureFromUIImage:(UIImage *)image1 anotherImage:(UIImage*)image2;
 @end
