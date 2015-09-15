@@ -30,9 +30,8 @@
 }
 - (IBAction)extractFeatureClicked:(UIButton *)sender {
     NSLog(@"Extract Feature Clicked");
-    UIImage* resultImage = [self.extractor extractFeatureFromUIImage:self.imageViewer1.image anotherImage:self.imageViewer2.image];
-    
-    [self.imageViewer1 setImage:resultImage];
+    UIImage* result = [self.extractor extractFeatureFromUIImage:self.imageViewer1.image anotherImage:self.imageViewer2.image];
+    self.imageViewer2.image = result;
 }
 
 @end
