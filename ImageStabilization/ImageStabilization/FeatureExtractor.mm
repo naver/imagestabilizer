@@ -155,6 +155,10 @@ bool isInRange(float checkValue, float avg, float st){
     avgX = avgX / inliers1.size();
     avgY = avgY / inliers1.size();
     avgR = avgR / inliers1.size();
+    
+    avgX = 10;
+    avgY = 10;
+    avgR = 10;
 
     NSLog(@"Avg : %lf %lf %lf", avgX, avgY, avgR);
     
@@ -162,7 +166,7 @@ bool isInRange(float checkValue, float avg, float st){
     int rows = originalImage.rows;
     int cols = originalImage.cols;
     
-    Mat rotM = getRotationMatrix2D(Point2f(rows/2,cols/2), avgR, 1.0);
+    Mat rotM = getRotationMatrix2D(Point2f(rows/2,cols/2), -avgR, 1.0);
     Mat transM = (Mat_<double>(2,3) << 1, 0, avgX, 0, 1, avgY);
     Mat trM = rotM;
     cv::Mat res(rows, cols, CV_8UC4);

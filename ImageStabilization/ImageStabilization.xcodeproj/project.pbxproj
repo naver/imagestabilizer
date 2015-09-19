@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		901FBB641BA8203300297C7F /* test2.png in Resources */ = {isa = PBXBuildFile; fileRef = 901FBB631BA8203300297C7F /* test2.png */; };
+		901FBB661BA8216600297C7F /* test3.png in Resources */ = {isa = PBXBuildFile; fileRef = 901FBB651BA8216600297C7F /* test3.png */; };
 		90DB83091BA3D54C005CBB9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83081BA3D54C005CBB9C /* main.m */; };
 		90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830B1BA3D54C005CBB9C /* AppDelegate.m */; };
 		90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830E1BA3D54C005CBB9C /* ViewController.mm */; };
@@ -32,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		901FBB631BA8203300297C7F /* test2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test2.png; sourceTree = "<group>"; };
+		901FBB651BA8216600297C7F /* test3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test3.png; sourceTree = "<group>"; };
 		90DB83031BA3D54C005CBB9C /* ImageStabilization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageStabilization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90DB83071BA3D54C005CBB9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90DB83081BA3D54C005CBB9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -104,6 +108,8 @@
 				90DB830E1BA3D54C005CBB9C /* ViewController.mm */,
 				90DB83321BA3F00B005CBB9C /* 1.jpg */,
 				90DB83331BA3F00B005CBB9C /* 2.jpg */,
+				901FBB631BA8203300297C7F /* test2.png */,
+				901FBB651BA8216600297C7F /* test3.png */,
 				90DB83101BA3D54C005CBB9C /* Main.storyboard */,
 				90DB83131BA3D54C005CBB9C /* Images.xcassets */,
 				90DB83151BA3D54C005CBB9C /* LaunchScreen.xib */,
@@ -231,6 +237,8 @@
 			files = (
 				90DB83121BA3D54C005CBB9C /* Main.storyboard in Resources */,
 				90DB83341BA3F00B005CBB9C /* 1.jpg in Resources */,
+				901FBB641BA8203300297C7F /* test2.png in Resources */,
+				901FBB661BA8216600297C7F /* test3.png in Resources */,
 				90DB83351BA3F00B005CBB9C /* 2.jpg in Resources */,
 				90DB83171BA3D54C005CBB9C /* LaunchScreen.xib in Resources */,
 				90DB83141BA3D54C005CBB9C /* Images.xcassets in Resources */,
@@ -466,6 +474,7 @@
 				90DB83281BA3D54C005CBB9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		90DB83291BA3D54C005CBB9C /* Build configuration list for PBXNativeTarget "ImageStabilizationTests" */ = {
 			isa = XCConfigurationList;
@@ -474,6 +483,7 @@
 				90DB832B1BA3D54C005CBB9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
