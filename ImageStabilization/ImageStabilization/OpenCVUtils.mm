@@ -7,8 +7,9 @@
 //
 
 #import "OpenCVUtils.h"
-
+using namespace cv;
 @implementation OpenCVUtils
+
 
 + (cv::Mat)cvMatFromUIImage:(UIImage *)image
 {
@@ -91,6 +92,24 @@
     CGColorSpaceRelease(colorSpace);
     
     return finalImage;
+}
+
++(cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2{
+    cv::Mat result(image1.rows, image1.cols, CV_8UC4);
+    image1.copyTo(result);
+    
+    for(int row = 0; row < image1.rows; row++){
+        for( int col = 0; col < image1.cols; col++){
+            cv::Vec4b c = image2.at<cv::Vec4b>(cv::Point(row,col));
+            
+            if(c[0] == 0 && c[1] == 0 && c[2] ==0){
+                // skip;
+            }else{
+                result.at<cv::Vec4b>(col,row) = c;
+            }
+        }
+    }
+    return  result;
 }
 
 

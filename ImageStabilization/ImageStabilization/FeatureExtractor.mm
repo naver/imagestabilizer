@@ -27,6 +27,92 @@ bool isInRange(float checkValue, float avg, float st){
     return false;
 }
 
+Mat getGeometricTransformMat(std::vector<KeyPoint>& aList, std::vector<KeyPoint>& bList){
+    
+// Geometric Transformation Matrix
+// T = t11 t12 0
+//     t21 t22 0
+//     t31 t32 1
+//
+// M1 * T = M2
+// M1 = SumOfAxSquare   SumOfAxAy       SumOfAx     0               0               0
+//      SumOfAxAy       SumofAySqaure   SumOfAy     0               0               0
+//      SumOfAx         SumOfAy         SumOf 1     0               0               0
+//      0               0               0           SumOfAxSquare   SumOfAxAy       SumOfAx
+//      0               0               0           SumOfAxAy       SumofAySqaure   SumOfAy
+//      0               0               0           SumOfAx         SumOfAy         SumOf 1
+//
+// M2 = SumOfAxBx
+//      SumOfAyBx
+//      SumOfBx
+//      SumOfAxBy
+//      SumOfAyBy
+//      SumOfBy
+    
+ 
+    double sumOfAxSquare = 0;
+    double sumOfAxAy = 0;
+    double sumOfAx = 0;
+    double sumOfAySquare = 0;
+    double sumOfAy = 0;
+    double sumOfAxBx = 0;
+    double sumOfAyBx = 0;
+    double sumOfBx = 0;
+    double sumOfAxBy = 0;
+    double sumOfAyBy = 0;
+    double sumOfBy = 0;
+    
+    for( int i = 0; i < aList.size(); i++){
+        KeyPoint a = aList[i];
+        KeyPoint b = bList[i];
+        
+        sumOfAxSquare += (a.pt.x * a.pt.x);
+        sumOfAxAy += (a.pt.x * a.pt.y);
+        sumOfAx += a.pt.x;
+        sumOfAySquare += (a.pt.y * a.pt.y);
+        sumOfAy += a.pt.y;
+        
+        sumOfAxBx += (a.pt.x * b.pt.x);
+        sumOfAyBx += (a.pt.y * b.pt.x);
+        sumOfBx += b.pt.x;
+        sumOfAxBy += (a.pt.x * b.pt.y);
+        sumOfAyBy += (a.pt.y * b.pt.y);
+        sumOfBy += b.pt.y;
+    }
+    
+    double sizeOfA = (double)aList.size();
+
+    double m1[6][6] = {{sumOfAxSquare, sumOfAxAy,sumOfAx,0,0,0},
+        {sumOfAxAy, sumOfAySquare, sumOfAy, 0,0,0},
+        {sumOfAx, sumOfAy, sizeOfA,0,0,0},
+        {0,0,0,sumOfAxSquare, sumOfAxAy,sumOfAx},
+        {0,0,0,sumOfAxAy, sumOfAySquare, sumOfAy},
+        {0,0,0,sumOfAx, sumOfAy, sizeOfA}};
+    
+    Mat M1Inv = Mat(6,6,CV_64F, m1).inv();
+    
+    double m2[6] = {sumOfAxBx, sumOfAyBx, sumOfBx, sumOfAxBy, sumOfAyBy, sumOfBy};
+    
+    Mat M2 = Mat(6,1,CV_64F, m2);
+    
+    Mat result = M1Inv * M2;
+    
+    double t[3][3] = {result.at<double>(0,0), result.at<double>(3,0), 0,
+        result.at<double>(1,0), result.at<double>(4,0),0,
+        result.at<double>(2,0), result.at<double>(5,0),1};
+    
+    
+    NSLog(@"Print result");
+    for( int i = 0 ; i < 6; i++){
+        for( int j = 0; j < 1; j++){
+            double val = result.at<double>(i,j);
+            NSLog(@"%lf",val);
+        }
+    }
+    
+    return Mat(3,3,CV_64F, t);
+}
+
 -(UIImage*) extractFeatureFromUIImage:(id)image1 anotherImage:(UIImage *)image2{
     cv::Mat grayImageA = [OpenCVUtils cvMatFromUIImage:image1];
     cv::Mat grayImageB = [OpenCVUtils cvMatFromUIImage:image2];
@@ -58,130 +144,58 @@ bool isInRange(float checkValue, float avg, float st){
 
     vector<KeyPoint> matched1, matched2, inliers1, inliers2;
     const float nn_match_ratio = 0.8f;
+
+    vector<cv::Point2f> p1, p2;
     
     for(size_t i = 0; i < nn_matches.size(); i++) {
         DMatch first = nn_matches[i][0];
         float dist1 = nn_matches[i][0].distance;
         float dist2 = nn_matches[i][1].distance;
         if(dist1 < nn_match_ratio * dist2) {
-            int new_i = matched1.size();
             matched1.push_back(keypointsA[first.queryIdx]);
             matched2.push_back(keypointsB[first.trainIdx]);
+            
+            p1.push_back(keypointsA[first.queryIdx].pt);
+            p2.push_back(keypointsB[first.trainIdx].pt);
         }
     }
     
     NSLog(@"Matched : %ld", matched1.size());
     
-    std::vector<float> diffX, diffY, diffR;
-    float avgX=0, avgY=0, avgR=0;
-    float varX = 0, varY = 0, varR =0;
-    
-//    NSMutableString* data = [[NSMutableString alloc] init];
-    
-    for(size_t i = 0; i < matched1.size(); i++){
-        KeyPoint p1 = matched1[i];
-        KeyPoint p2 = matched2[i];
-        
-        float dx = (p1.pt.x - p2.pt.x);
-        float dy = (p1.pt.y - p2.pt.y);
-        float dR = (p1.angle - p2.angle);
-
-        avgX += dx;
-        avgY += dy;
-        avgR += dR;
-        
-        diffX.push_back(dx);
-        diffY.push_back(dy);
-        diffR.push_back(dR);
-        
-//        NSLog(@"%lf %lf %lf %lf %lf %lf", p1.pt.x, p1.pt.y, p1.angle, p2.pt.x, p2.pt.y, p2.angle);
-//        [data appendFormat:@"%lf %lf %lf %lf %lf %lf\n", p1.pt.x, p1.pt.y, p1.angle, p2.pt.x, p2.pt.y, p2.angle];
-    }
-    
-//    NSLog(@"data : \n%@", data);
-    
-    avgX = avgX / matched1.size();
-    avgY = avgY / matched1.size();
-    avgR = avgR / matched1.size();
-    
-    NSLog(@"Prev Avg : %lf %lf %lf", avgX, avgY, avgR);
-    
-    for(size_t i = 0; i < matched1.size(); i++){
-        varX += ((diffX[i] - avgX)*(diffX[i] - avgX));
-        varY += ((diffY[i] - avgY)*(diffY[i] - avgY));
-        varR += ((diffR[i] - avgR)*(diffR[i] - avgR));
-    }
-    
-    varX = varX / matched1.size();
-    varY = varY / matched1.size();
-    varR = varR / matched1.size();
-    
-    float stdX = sqrt(varX);
-    float stdY = sqrt(varY);
-    float stdR = sqrt(varR);
-    
-    for(size_t i = 0; i < matched1.size(); i++){
-        KeyPoint p1 = matched1[i];
-        KeyPoint p2 = matched2[i];
-        
-        float dx = (p1.pt.x - p2.pt.x);
-        float dy = (p1.pt.y - p2.pt.y);
-        float dR = (p1.angle - p2.angle);
-
-        if(isInRange(dx,avgX, stdX) && isInRange(dy,avgY, stdY) && isInRange(dR, avgR, stdR)){
-            inliers1.push_back(p1);
-            inliers2.push_back(p2);
+    Mat t1 = getGeometricTransformMat(matched1, matched2);
+    for( int i =0 ; i < 3; i++){
+        for( int j= 0; j < 3; j++){
+            double v = t1.at<double>(i,j);
+            NSLog(@"t1 : %lf", v);
         }
     }
     
-    NSLog(@"Inliner : %ld", inliers1.size());
-    
-    avgX = 0;
-    avgY = 0;
-    avgR = 0;
-    for(size_t i = 0; i < inliers1.size(); i++){
-        KeyPoint p1 = inliers1[i];
-        KeyPoint p2 = inliers2[i];
-        
-        float dx = (p1.pt.x - p2.pt.x);
-        float dy = (p1.pt.y - p2.pt.y);
-        float dR = (p1.angle - p2.angle);
-        
-        avgX += dx;
-        avgY += dy;
-        avgR += dR;
-    }
-    
-    avgX = avgX / inliers1.size();
-    avgY = avgY / inliers1.size();
-    avgR = avgR / inliers1.size();
-    
-    avgX = 10;
-    avgY = 10;
-    avgR = 10;
+    Mat R = estimateRigidTransform(p2, p1, true);
 
-    NSLog(@"Avg : %lf %lf %lf", avgX, avgY, avgR);
+    cv::Mat H = cv::Mat(3,3,R.type());
+    H.at<double>(0,0) = R.at<double>(0,0);
+    H.at<double>(0,1) = R.at<double>(0,1);
+    H.at<double>(0,2) = R.at<double>(0,2);
+    
+    H.at<double>(1,0) = R.at<double>(1,0);
+    H.at<double>(1,1) = R.at<double>(1,1);
+    H.at<double>(1,2) = R.at<double>(1,2);
+    
+    H.at<double>(2,0) = 0.0;
+    H.at<double>(2,1) = 0.0;
+    H.at<double>(2,2) = 1.0;
     
     Mat originalImage = [OpenCVUtils cvMatFromUIImage:image2];
     int rows = originalImage.rows;
     int cols = originalImage.cols;
     
-    Mat rotM = getRotationMatrix2D(Point2f(rows/2,cols/2), -avgR, 1.0);
-    Mat transM = (Mat_<double>(2,3) << 1, 0, avgX, 0, 1, avgY);
-    Mat trM = rotM;
     cv::Mat res(rows, cols, CV_8UC4);
+    warpPerspective(originalImage, res, H, cv::Size(rows, cols));
+    res = [OpenCVUtils mergeImage:[OpenCVUtils cvMatFromUIImage:image1] another:res];
     
-    warpAffine(originalImage, res, rotM, cv::Size(rows,cols));
-    warpAffine(res, res, transM, cv::Size(rows,cols));
-
-    
-    NSLog(@"TRM");
-
-//    Mat res;
-//    drawMatches(grayImageA, matched1, grayImageB, matched2, good_matches, res);
     UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:res];
     [self saveImage:resultImage fileName:@"test1"];
-//    
+
     return resultImage;
 }
 

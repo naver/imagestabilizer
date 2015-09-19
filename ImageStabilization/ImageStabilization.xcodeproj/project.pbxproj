@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		900960461BAD59F000A63C10 /* 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 900960451BAD59F000A63C10 /* 7.jpg */; };
 		901FBB641BA8203300297C7F /* test2.png in Resources */ = {isa = PBXBuildFile; fileRef = 901FBB631BA8203300297C7F /* test2.png */; };
 		901FBB661BA8216600297C7F /* test3.png in Resources */ = {isa = PBXBuildFile; fileRef = 901FBB651BA8216600297C7F /* test3.png */; };
 		90DB83091BA3D54C005CBB9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83081BA3D54C005CBB9C /* main.m */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		900960451BAD59F000A63C10 /* 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 7.jpg; sourceTree = "<group>"; };
 		901FBB631BA8203300297C7F /* test2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test2.png; sourceTree = "<group>"; };
 		901FBB651BA8216600297C7F /* test3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test3.png; sourceTree = "<group>"; };
 		90DB83031BA3D54C005CBB9C /* ImageStabilization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageStabilization.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +110,7 @@
 				90DB830E1BA3D54C005CBB9C /* ViewController.mm */,
 				90DB83321BA3F00B005CBB9C /* 1.jpg */,
 				90DB83331BA3F00B005CBB9C /* 2.jpg */,
+				900960451BAD59F000A63C10 /* 7.jpg */,
 				901FBB631BA8203300297C7F /* test2.png */,
 				901FBB651BA8216600297C7F /* test3.png */,
 				90DB83101BA3D54C005CBB9C /* Main.storyboard */,
@@ -238,6 +241,7 @@
 				90DB83121BA3D54C005CBB9C /* Main.storyboard in Resources */,
 				90DB83341BA3F00B005CBB9C /* 1.jpg in Resources */,
 				901FBB641BA8203300297C7F /* test2.png in Resources */,
+				900960461BAD59F000A63C10 /* 7.jpg in Resources */,
 				901FBB661BA8216600297C7F /* test3.png in Resources */,
 				90DB83351BA3F00B005CBB9C /* 2.jpg in Resources */,
 				90DB83171BA3D54C005CBB9C /* LaunchScreen.xib in Resources */,
