@@ -7,13 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		900960461BAD59F000A63C10 /* 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 900960451BAD59F000A63C10 /* 7.jpg */; };
+		901FBB641BA8203300297C7F /* test2.png in Resources */ = {isa = PBXBuildFile; fileRef = 901FBB631BA8203300297C7F /* test2.png */; };
+		901FBB661BA8216600297C7F /* test3.png in Resources */ = {isa = PBXBuildFile; fileRef = 901FBB651BA8216600297C7F /* test3.png */; };
 		90DB83091BA3D54C005CBB9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83081BA3D54C005CBB9C /* main.m */; };
 		90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830B1BA3D54C005CBB9C /* AppDelegate.m */; };
-		90DB830F1BA3D54C005CBB9C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830E1BA3D54C005CBB9C /* ViewController.m */; };
+		90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830E1BA3D54C005CBB9C /* ViewController.mm */; };
 		90DB83121BA3D54C005CBB9C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83101BA3D54C005CBB9C /* Main.storyboard */; };
 		90DB83141BA3D54C005CBB9C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83131BA3D54C005CBB9C /* Images.xcassets */; };
 		90DB83171BA3D54C005CBB9C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83151BA3D54C005CBB9C /* LaunchScreen.xib */; };
 		90DB83231BA3D54C005CBB9C /* ImageStabilizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83221BA3D54C005CBB9C /* ImageStabilizationTests.m */; };
+		90DB832F1BA3DC05005CBB9C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90DB832E1BA3DC05005CBB9C /* opencv2.framework */; };
+		90DB83341BA3F00B005CBB9C /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83321BA3F00B005CBB9C /* 1.jpg */; };
+		90DB83351BA3F00B005CBB9C /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90DB83331BA3F00B005CBB9C /* 2.jpg */; };
+		90DB83391BA3F304005CBB9C /* FeatureExtractor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83381BA3F304005CBB9C /* FeatureExtractor.mm */; };
+		90DB833C1BA3F371005CBB9C /* OpenCVUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90DB833B1BA3F371005CBB9C /* OpenCVUtils.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,19 +35,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		900960451BAD59F000A63C10 /* 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 7.jpg; sourceTree = "<group>"; };
+		901FBB631BA8203300297C7F /* test2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test2.png; sourceTree = "<group>"; };
+		901FBB651BA8216600297C7F /* test3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test3.png; sourceTree = "<group>"; };
 		90DB83031BA3D54C005CBB9C /* ImageStabilization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageStabilization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90DB83071BA3D54C005CBB9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90DB83081BA3D54C005CBB9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		90DB830A1BA3D54C005CBB9C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		90DB830B1BA3D54C005CBB9C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		90DB830D1BA3D54C005CBB9C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		90DB830E1BA3D54C005CBB9C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		90DB830E1BA3D54C005CBB9C /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
 		90DB83111BA3D54C005CBB9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		90DB83131BA3D54C005CBB9C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		90DB83161BA3D54C005CBB9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		90DB831C1BA3D54C005CBB9C /* ImageStabilizationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageStabilizationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		90DB83211BA3D54C005CBB9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90DB83221BA3D54C005CBB9C /* ImageStabilizationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageStabilizationTests.m; sourceTree = "<group>"; };
+		90DB832E1BA3DC05005CBB9C /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		90DB83311BA3E70E005CBB9C /* OpenCVPrefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCVPrefix.pch; sourceTree = "<group>"; };
+		90DB83321BA3F00B005CBB9C /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
+		90DB83331BA3F00B005CBB9C /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
+		90DB83371BA3F304005CBB9C /* FeatureExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureExtractor.h; sourceTree = "<group>"; };
+		90DB83381BA3F304005CBB9C /* FeatureExtractor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FeatureExtractor.mm; sourceTree = "<group>"; };
+		90DB833A1BA3F371005CBB9C /* OpenCVUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenCVUtils.h; sourceTree = "<group>"; };
+		90DB833B1BA3F371005CBB9C /* OpenCVUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCVUtils.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90DB832F1BA3DC05005CBB9C /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +83,7 @@
 		90DB82FA1BA3D54C005CBB9C = {
 			isa = PBXGroup;
 			children = (
+				90DB832E1BA3DC05005CBB9C /* opencv2.framework */,
 				90DB83051BA3D54C005CBB9C /* ImageStabilization */,
 				90DB831F1BA3D54C005CBB9C /* ImageStabilizationTests */,
 				90DB83041BA3D54C005CBB9C /* Products */,
@@ -81,10 +102,17 @@
 		90DB83051BA3D54C005CBB9C /* ImageStabilization */ = {
 			isa = PBXGroup;
 			children = (
+				90DB83361BA3F2D9005CBB9C /* Stabilization */,
+				90DB83311BA3E70E005CBB9C /* OpenCVPrefix.pch */,
 				90DB830A1BA3D54C005CBB9C /* AppDelegate.h */,
 				90DB830B1BA3D54C005CBB9C /* AppDelegate.m */,
 				90DB830D1BA3D54C005CBB9C /* ViewController.h */,
-				90DB830E1BA3D54C005CBB9C /* ViewController.m */,
+				90DB830E1BA3D54C005CBB9C /* ViewController.mm */,
+				90DB83321BA3F00B005CBB9C /* 1.jpg */,
+				90DB83331BA3F00B005CBB9C /* 2.jpg */,
+				900960451BAD59F000A63C10 /* 7.jpg */,
+				901FBB631BA8203300297C7F /* test2.png */,
+				901FBB651BA8216600297C7F /* test3.png */,
 				90DB83101BA3D54C005CBB9C /* Main.storyboard */,
 				90DB83131BA3D54C005CBB9C /* Images.xcassets */,
 				90DB83151BA3D54C005CBB9C /* LaunchScreen.xib */,
@@ -117,6 +145,17 @@
 				90DB83211BA3D54C005CBB9C /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		90DB83361BA3F2D9005CBB9C /* Stabilization */ = {
+			isa = PBXGroup;
+			children = (
+				90DB83371BA3F304005CBB9C /* FeatureExtractor.h */,
+				90DB83381BA3F304005CBB9C /* FeatureExtractor.mm */,
+				90DB833A1BA3F371005CBB9C /* OpenCVUtils.h */,
+				90DB833B1BA3F371005CBB9C /* OpenCVUtils.mm */,
+			);
+			name = Stabilization;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,6 +239,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				90DB83121BA3D54C005CBB9C /* Main.storyboard in Resources */,
+				90DB83341BA3F00B005CBB9C /* 1.jpg in Resources */,
+				901FBB641BA8203300297C7F /* test2.png in Resources */,
+				900960461BAD59F000A63C10 /* 7.jpg in Resources */,
+				901FBB661BA8216600297C7F /* test3.png in Resources */,
+				90DB83351BA3F00B005CBB9C /* 2.jpg in Resources */,
 				90DB83171BA3D54C005CBB9C /* LaunchScreen.xib in Resources */,
 				90DB83141BA3D54C005CBB9C /* Images.xcassets in Resources */,
 			);
@@ -219,8 +263,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90DB830F1BA3D54C005CBB9C /* ViewController.m in Sources */,
+				90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */,
+				90DB83391BA3F304005CBB9C /* FeatureExtractor.mm in Sources */,
 				90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */,
+				90DB833C1BA3F371005CBB9C /* OpenCVUtils.mm in Sources */,
 				90DB83091BA3D54C005CBB9C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,7 +395,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/ImageStabilization/OpenCVPrefix.pch";
 				INFOPLIST_FILE = ImageStabilization/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -359,7 +412,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/ImageStabilization/OpenCVPrefix.pch";
 				INFOPLIST_FILE = ImageStabilization/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -418,6 +478,7 @@
 				90DB83281BA3D54C005CBB9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		90DB83291BA3D54C005CBB9C /* Build configuration list for PBXNativeTarget "ImageStabilizationTests" */ = {
 			isa = XCConfigurationList;
@@ -426,6 +487,7 @@
 				90DB832B1BA3D54C005CBB9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
