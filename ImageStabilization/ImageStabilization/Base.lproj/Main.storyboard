@@ -19,10 +19,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="sPs-sH-RXZ" userLabel="first image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="data_1_1" translatesAutoresizingMaskIntoConstraints="NO" id="sPs-sH-RXZ" userLabel="first image">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="test3.png" translatesAutoresizingMaskIntoConstraints="NO" id="oSR-rs-0Cz" userLabel="second image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="data_1_1" translatesAutoresizingMaskIntoConstraints="NO" id="oSR-rs-0Cz" userLabel="second image">
                                 <rect key="frame" x="0.0" y="300" width="600" height="300"/>
                             </imageView>
                             <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTr-cX-lED" userLabel="Extract feature">
@@ -60,7 +60,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="1.jpg" width="2448" height="2448"/>
-        <image name="test3.png" width="2448" height="2448"/>
+        <image name="data_1_1" width="640" height="640"/>
     </resources>
 </document>
