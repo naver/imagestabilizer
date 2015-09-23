@@ -15,7 +15,7 @@ All this process are simply implemented using OpenCV
 ## Screenshot
 ![demo.gif](/docs/demo.gif)
 
-Top images are original images and bottom images are stabilized image using ImageStabilizer.
+Top animated image shows original images and bottom animated image is stabilized images using ImageStabilizer.
 
 ## Requirement
 1. OpenCV Framework
