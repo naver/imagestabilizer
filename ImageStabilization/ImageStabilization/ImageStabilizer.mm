@@ -23,14 +23,7 @@ using namespace cv;
     self.sourceImageMat = [OpenCVUtils cvMatFromUIImage:sourceImage];
 }
 
-
--(UIImage*) stabilizeImage:(UIImage*)targetImage{
-    Mat grayTargetImage = [OpenCVUtils cvMatFromUIImage:targetImage];
-    Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:targetImage];
-    
-    std::vector<cv::KeyPoint> keypointsA, keypointsB;
-    cv::Mat descriptorsA, descriptorsB;
-    
+void extractFeatureUsingBRISK(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
     // Set brisk parameters
     int Threshl=60;
     int Octaves=4; //(pyramid layer) from which the keypoint has been extracted
@@ -38,15 +31,27 @@ using namespace cv;
     
     cv::Ptr<cv::FeatureDetector> detactor = cv::BRISK::create(Threshl, Octaves, PatternScales);
     
+    detactor->detect(imageMat, keyPoints);
+    detactor->compute(imageMat, keyPoints, descriptor);
+}
+
+-(UIImage*) stabilizeImage:(UIImage*)targetImage{
+    Mat grayTargetImage = [OpenCVUtils cvMatFromUIImage:targetImage];
+    Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:targetImage];
+    
+    std::vector<cv::KeyPoint> keypointsA, keypointsB;
+    cv::Mat descriptorsA, descriptorsB;
+
     NSLog(@"Start of Detection");
-    detactor->detect(self.graySourceImage, keypointsA);
-    detactor->detect(grayTargetImage, keypointsB);
+    extractFeatureUsingBRISK(_graySourceImage, keypointsA, descriptorsA);
+    extractFeatureUsingBRISK(grayTargetImage, keypointsB, descriptorsB);
+    
     NSLog(@"End of Detection : extracted from A : %ld, B : %ld", keypointsA.size(), keypointsB.size());
     
-    NSLog(@"Start of Compute");
-    detactor->compute(self.graySourceImage, keypointsA, descriptorsA);
-    detactor->compute(grayTargetImage, keypointsB, descriptorsB);
-    NSLog(@"End of Compute");
+    if(keypointsA.size() ==0 || keypointsB.size()== 0){
+        NSLog(@"ERROR : Feature Extraction Failed....");
+        return targetImage;
+    }
     
     NSLog(@"Start of matching");
     cv::BFMatcher matcher(cv::NORM_HAMMING);
