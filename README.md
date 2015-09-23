@@ -12,18 +12,18 @@ GrabCut is an image segmentation method based on graph cuts. The algorithm was d
 
 ## Usage
       1. Import ImageStabilizer
-        ```objectiveC
-        #import "ImageStabilizer.h"
-        ImageStabilizer* stabilizer = [[ImageStailizer alloc] init];
-        ```
+ ```objectiveC
+  #import "ImageStabilizer.h"
+  ImageStabilizer* stabilizer = [[ImageStailizer alloc] init];
+  ```
       2. Set first image to compare with others.
-        ```objectiveC
-        -(void) setStabilizeSourceImage:(UIImage*) sourceImage;
-        ```
+  ```objectiveC
+  -(void) setStabilizeSourceImage:(UIImage*) sourceImage;
+  ```
       3. Get stabilized image
-        ```objectiveC
-        -(UIImage*) stabilizeImage:(UIImage*)targetImage;
-        ```
+  ```objectiveC
+  -(UIImage*) stabilizeImage:(UIImage*)targetImage;
+  ```
 
 ## Limitation
 This program use OpenCV library.
