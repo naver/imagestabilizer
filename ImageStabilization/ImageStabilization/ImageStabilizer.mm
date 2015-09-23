@@ -19,8 +19,8 @@ using namespace cv;
 
 @implementation ImageStabilizer
 -(void) setStabilizeSourceImage:(UIImage*) sourceImage{
-    self.graySourceImage = [OpenCVUtils cvMatFromUIImage:sourceImage];
     self.sourceImageMat = [OpenCVUtils cvMatFromUIImage:sourceImage];
+    cvtColor(_sourceImageMat, _graySourceImage, CV_BGR2GRAY);
 }
 
 void extractFeatureUsingBRISK(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
@@ -35,16 +35,22 @@ void extractFeatureUsingBRISK(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& d
     detactor->compute(imageMat, keyPoints, descriptor);
 }
 
+void extractFeatureUsingAkaze(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
+    Ptr<AKAZE> akaze = AKAZE::create();
+    akaze->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
+}
+
 -(UIImage*) stabilizeImage:(UIImage*)targetImage{
-    Mat grayTargetImage = [OpenCVUtils cvMatFromUIImage:targetImage];
     Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:targetImage];
+    Mat grayTargetImage;
+    cvtColor(targetImageMat, grayTargetImage, CV_BGR2GRAY);
     
     std::vector<cv::KeyPoint> keypointsA, keypointsB;
     cv::Mat descriptorsA, descriptorsB;
 
     NSLog(@"Start of Detection");
-    extractFeatureUsingBRISK(_graySourceImage, keypointsA, descriptorsA);
-    extractFeatureUsingBRISK(grayTargetImage, keypointsB, descriptorsB);
+    extractFeatureUsingAkaze(_graySourceImage, keypointsA, descriptorsA);
+    extractFeatureUsingAkaze(grayTargetImage, keypointsB, descriptorsB);
     
     NSLog(@"End of Detection : extracted from A : %ld, B : %ld", keypointsA.size(), keypointsB.size());
     
