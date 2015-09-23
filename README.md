@@ -2,10 +2,17 @@
 Image stabilization using features detector in IOS
 
 ## Overview
-GrabCut is an image segmentation method based on graph cuts. The algorithm was designed by Carsten Rother, Vladimir Kolmogorov & Andrew Blake from Microsoft Research Cambridge, UK. in their paper, "GrabCut": interactive foreground extraction using iterated graph cuts . An algorithm was needed for foreground extraction with minimal user interaction, and the result was GrabCut.
+Image stabilization is a essential technique when you take images using continuous shooting.
+There are many approaches to solve this problem but this project use the feature extraction.
+
+* At first, Extract features from image using Feature extractor like SIFT, SURF. In this project, I use BRISK and AKAZE, because it is fast and there is no patent issue.
+* Find Matching features in two images. There are many matching technique but I just use Bruteforce Matcher because it is simple and result is not bad in this project.
+* Last, Get geometric transformation matrix which is minimize error of transformed points. RANSAC is used for this process.
 
 ## Screenshot
 ![demo.gif](/docs/demo.gif)
+
+Top images are original images and bottom images are stabilized image using ImageStabilizer.
 
 ## Requirement
 1. OpenCV Framework
