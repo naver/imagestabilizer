@@ -16,4 +16,6 @@
 
 @interface FeatureExtractor : NSObject
 -(UIImage*) extractFeatureFromUIImage:(UIImage *)image1 anotherImage:(UIImage*)image2;
+-(void) setStabilizeSourceImage:(UIImage*) sourceImage;
+-(UIImage*) stabilizeImage:(UIImage*)targetImage;
 @end

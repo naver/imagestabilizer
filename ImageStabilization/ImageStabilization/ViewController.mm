@@ -8,9 +8,11 @@
 
 #import "ViewController.h"
 #import "FeatureExtractor.h"
+#import "ImageStabilizer.h"
 
 @interface ViewController ()
 @property(nonatomic, strong) FeatureExtractor* extractor;
+@property(nonatomic, strong) ImageStabilizer* stabilizer;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer2;
 @property (nonatomic, strong) NSTimer* timer;
@@ -27,6 +29,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     self.extractor = [[FeatureExtractor alloc] init];
+    self.stabilizer = [[ImageStabilizer alloc] init];
     [self setDefaultImages];
     self.currentIndex = 0;
     self.showResults = NO;
@@ -45,19 +48,18 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)extractFeatureClicked:(UIButton *)sender {
-    NSLog(@"Extract Feature Clicked");
-//    UIImage* result = [self.extractor extractFeatureFromUIImage:self.imageViewer1.image anotherImage:self.imageViewer2.image];
-//    self.imageViewer2.image = result;
+- (IBAction)stabilizeImageClicked:(UIButton *)sender {
+    NSLog(@"Stabilize start");
 
     _showResults = NO;
     [self.resultImages removeAllObjects];
     [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+    [self.stabilizer setStabilizeSourceImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
 
     for( int i =1; i < [self.images count] ; i++){
-        UIImage* result = [self.extractor extractFeatureFromUIImage:[UIImage imageNamed:[self.images objectAtIndex:0]] anotherImage:[UIImage imageNamed:[self.images objectAtIndex:i]]];
+        UIImage* result = [self.stabilizer stabilizeImage:[UIImage imageNamed:[self.images objectAtIndex:i]]];
         [self.resultImages addObject:result];
-        NSLog(@"Result : %d", i);
+        NSLog(@"Stabilize Result Index : %d", i);
     }
     _showResults = YES;
 }

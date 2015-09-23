@@ -26,13 +26,13 @@
                                 <rect key="frame" x="0.0" y="300" width="600" height="300"/>
                             </imageView>
                             <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VTr-cX-lED" userLabel="Extract feature">
-                                <rect key="frame" x="449" y="50" width="105" height="30"/>
+                                <rect key="frame" x="470" y="50" width="84" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Extract Feature">
+                                <state key="normal" title="Stabilization">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="extractFeatureClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FyI-n3-w8S"/>
+                                    <action selector="stabilizeImageClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="J44-bc-SfT"/>
                                 </connections>
                             </button>
                         </subviews>
