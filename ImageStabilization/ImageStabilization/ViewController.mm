@@ -11,7 +11,6 @@
 #import "ImageStabilizer.h"
 
 @interface ViewController ()
-@property(nonatomic, strong) FeatureExtractor* extractor;
 @property(nonatomic, strong) ImageStabilizer* stabilizer;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer2;
@@ -28,7 +27,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.extractor = [[FeatureExtractor alloc] init];
     self.stabilizer = [[ImageStabilizer alloc] init];
     [self setDefaultImages];
     self.currentIndex = 0;
