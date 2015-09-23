@@ -1,4 +1,4 @@
-# ImageStabilizationUsingFeatureIOS
+# ImageStabilizerIOS
 Image stabilization using features detector in IOS
 
 ## Overview
@@ -47,7 +47,7 @@ So I want to improve this code to use GPU like GPUImage.
 * http://docs.opencv.org/master/db/d70/tutorial_akaze_matching.html#gsc.tab=0
 
 ## License
-ImageStabilizationUsingFeatureIOS is licensed under the Apache License, Version 2.0.
+ImageStabilizerIOS is licensed under the Apache License, Version 2.0.
 See [LICENSE](/docs/LICENSE.txt) for full license text.
 
         Copyright (c) 2015 Naver Corp.
