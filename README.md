@@ -58,15 +58,12 @@ This program use OpenCV library.
 It is not use GPU in IOS. it is obviously more slower than library that it use GPU.
 So I want to improve this code to use GPU like GPUImage.
 
-This algorithm is based on color value distribution. 
-There is a limitation when foreground and background color are similar.
-
 ## References
-* C. Rother, V. Kolmogorov, and A. Blake, GrabCut: Interactive foreground extraction using iterated graph cuts, ACM Trans. Graph., vol. 23, pp. 309–314, 2004.
-* http://docs.opencv.org/master/d8/d83/tutorial_py_grabcut.html#gsc.tab=0
+* http://stackoverflow.com/questions/13423884/how-to-use-brisk-in-opencv
+* http://docs.opencv.org/master/db/d70/tutorial_akaze_matching.html#gsc.tab=0
 
 ## License
-GrabCutIOS is licensed under the Apache License, Version 2.0.
+ImageStabilizationUsingFeatureIOS is licensed under the Apache License, Version 2.0.
 See [LICENSE](/files/79302) for full license text.
 
         Copyright (c) 2015 Naver Corp.
