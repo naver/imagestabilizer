@@ -32,7 +32,7 @@
     self.currentIndex = 0;
     self.showResults = NO;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
-    [self.imageViewer2 setImage:[UIImage imageNamed:@"data_1_1.jpg"]];
+    [self.imageViewer2 setImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
     
     _resultImages = [NSMutableArray array];
 }
@@ -78,7 +78,10 @@
 }
 
 -(void) setDefaultImages{
+    
     self.images = @[@"data_1_1.jpg",@"data_1_2.jpg",@"data_1_3.jpg",@"data_1_4.jpg",@"data_1_5.jpg",@"data_1_6.jpg"];
+//    self.images = @[@"data_2_1.jpg",@"data_2_2.jpg",@"data_2_3.jpg",@"data_2_4.jpg",@"data_2_5.jpg",@"data_2_6.jpg"];
+    
 }
 
 @end
