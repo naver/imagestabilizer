@@ -9,6 +9,9 @@ There are many approaches to solve this problem but this project use the feature
 * Find Matching features in two images. There are many matching technique but I just use Bruteforce Matcher because it is simple and result is not bad in this project.
 * Last, Get geometric transformation matrix which is minimize error of transformed points. RANSAC is used for this process.
 
+All this process are simply implemented using OpenCV
+
+
 ## Screenshot
 ![demo.gif](/docs/demo.gif)
 
