@@ -11,46 +11,20 @@ GrabCut is an image segmentation method based on graph cuts. The algorithm was d
 1. OpenCV Framework
 
 ## Usage
-1. Import GrabCutManager
+1. Import ImageStabilizer
 ```objectiveC
-#import "GrabCutManager.h"
-GrabCutManager* grabcut = [[GrabCutManager alloc] init];
+#import "ImageStabilizer.h"
+ImageStabilizer* stabilizer = [[ImageStailizer alloc] init];
 ```
 
-2. Set foreground boundary with a rect.
+2. Set first image to compare with others.
 ```objectiveC
--(UIImage*) doGrabCut:(UIImage*)sourceImage foregroundBound:(CGRect) rect iterationCount:(int)iterCount;
-```
-```objectiveC
--(void) doGrabcut{
-    __weak typeof(self)weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
-                                             (unsigned long)NULL), ^(void) {
-        UIImage* resultImage= [weakSelf.grabcut doGrabCut:weakSelf.resizedImage foregroundBound:weakSelf.grabRect iterationCount:5];
-        resultImage = [weakSelf masking:weakSelf.originalImage mask:[weakSelf resizeImage:resultImage size:weakSelf.originalImage.size]];        
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            [weakSelf.resultImageView setImage:resultImage];
-        });
-    });
-}
+-(void) setStabilizeSourceImage:(UIImage*) sourceImage;
 ```
 
-3. Make masking image with the adding or removing parts from result.
+3. Get stabilized image
 ```objectiveC
--(UIImage*) doGrabCutWithMask:(UIImage*)sourceImage maskImage:(UIImage*)maskImage iterationCount:(int) iterCount;
-```
-```objectiveC
--(void) doGrabcutWithMaskImage:(UIImage*)image{
-    __weak typeof(self)weakSelf = self;    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
-                                             (unsigned long)NULL), ^(void) {
-        UIImage* resultImage= [weakSelf.grabcut doGrabCutWithMask:weakSelf.resizedImage maskImage:[weakSelf resizeImage:image size:weakSelf.resizedImage.size] iterationCount:5];
-        resultImage = [weakSelf masking:weakSelf.originalImage mask:[weakSelf resizeImage:resultImage size:weakSelf.originalImage.size]];
-        dispatch_async(dispatch_get_main_queue(), ^(void) {
-            [weakSelf.resultImageView setImage:resultImage];
-        });
-    });
-}
+-(UIImage*) stabilizeImage:(UIImage*)targetImage;
 ```
 
 ## Limitation
