@@ -199,6 +199,13 @@ Mat getGeometricTransformMat(std::vector<KeyPoint>& aList, std::vector<KeyPoint>
     return resultImage;
 }
 
+-(void) setStabilizeSourceImage:(UIImage*) sourceImage{
+    
+}
+-(UIImage*) stabilizeImage:(UIImage*)targetImage{
+    return nil;
+}
+
 - (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName;
 {
     NSData *dataForPNGFile = UIImagePNGRepresentation(imageToSave);
