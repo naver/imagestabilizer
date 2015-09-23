@@ -45,7 +45,7 @@ So I want to improve this code to use GPU like GPUImage.
 
 ## License
 ImageStabilizationUsingFeatureIOS is licensed under the Apache License, Version 2.0.
-See [LICENSE](/files/79302) for full license text.
+See [LICENSE](/docs/LICENSE.txt) for full license text.
 
         Copyright (c) 2015 Naver Corp.
         @Author Eunchul Jeon
