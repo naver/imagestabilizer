@@ -15,22 +15,25 @@ using namespace cv;
 @interface ImageStabilizer()
 @property(nonatomic) Mat graySourceImage;
 @property(nonatomic) Mat sourceImageMat;
+@property(nonatomic) NSInteger saveImageIndex;
 @end
 
 @implementation ImageStabilizer
 -(void) setStabilizeSourceImage:(UIImage*) sourceImage{
     self.sourceImageMat = [OpenCVUtils cvMatFromUIImage:sourceImage];
+//    self.graySourceImage = [OpenCVUtils cvMatFromUIImage:sourceImage];
     cvtColor(_sourceImageMat, _graySourceImage, CV_BGR2GRAY);
+    
+    _saveImageIndex = 0;
 }
 
 void extractFeatureUsingBRISK(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
     // Set brisk parameters
-    int Threshl=60;
-    int Octaves=4; //(pyramid layer) from which the keypoint has been extracted
-    float PatternScales=1.0f;
+//    int Threshl=80;
+//    int Octaves=4; //(pyramid layer) from which the keypoint has been extracted
+//    float PatternScales=1.0f;
     
-    cv::Ptr<cv::FeatureDetector> detactor = cv::BRISK::create(Threshl, Octaves, PatternScales);
-    
+    cv::Ptr<cv::FeatureDetector> detactor = cv::BRISK::create();
     detactor->detect(imageMat, keyPoints);
     detactor->compute(imageMat, keyPoints, descriptor);
 }
@@ -40,8 +43,21 @@ void extractFeatureUsingAkaze(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& d
     akaze->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
 }
 
+void extractFeatureUsingORB(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
+
+    Ptr<ORB> orb = ORB::create();
+    orb->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
+}
+
+void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
+    Ptr<MSER> mser = MSER::create();
+    mser->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
+}
+
+
 -(UIImage*) stabilizeImage:(UIImage*)targetImage{
     Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:targetImage];
+//    Mat grayTargetImage = [OpenCVUtils cvMatFromUIImage:targetImage];;
     Mat grayTargetImage;
     cvtColor(targetImageMat, grayTargetImage, CV_BGR2GRAY);
     
@@ -49,8 +65,15 @@ void extractFeatureUsingAkaze(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& d
     cv::Mat descriptorsA, descriptorsB;
 
     NSLog(@"Start of Detection");
-    extractFeatureUsingAkaze(_graySourceImage, keypointsA, descriptorsA);
-    extractFeatureUsingAkaze(grayTargetImage, keypointsB, descriptorsB);
+//    extractFeatureUsingBRISK(_graySourceImage, keypointsA, descriptorsA);
+//    extractFeatureUsingBRISK(grayTargetImage, keypointsB, descriptorsB);
+    
+    extractFeatureUsingORB(_sourceImageMat, keypointsA, descriptorsA);
+    extractFeatureUsingORB(targetImageMat, keypointsB, descriptorsB);
+    
+//    extractFEatureUsingMSER(_graySourceImage, keypointsA, descriptorsA);
+//    extractFEatureUsingMSER(grayTargetImage, keypointsB, descriptorsB);
+
     
     NSLog(@"End of Detection : extracted from A : %ld, B : %ld", keypointsA.size(), keypointsB.size());
     
@@ -107,7 +130,8 @@ void extractFeatureUsingAkaze(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& d
     res = [OpenCVUtils mergeImage:self.sourceImageMat another:res];
     
     UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:res];
-    
+    [OpenCVUtils saveImage:resultImage fileName:[NSString stringWithFormat:@"result_%ld",_saveImageIndex++]];
+
     return resultImage;
 }
 

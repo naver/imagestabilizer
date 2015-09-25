@@ -14,4 +14,5 @@
 + (cv::Mat)cvMatGrayFromUIImage:(UIImage *)image;
 + (UIImage *)UIImageFromCVMat:(cv::Mat)cvMat;
 + (cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2;
++ (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName;
 @end

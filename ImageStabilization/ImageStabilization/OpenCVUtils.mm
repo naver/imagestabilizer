@@ -112,5 +112,21 @@ using namespace cv;
     return  result;
 }
 
++ (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName
+{
+    NSData *dataForPNGFile = UIImagePNGRepresentation(imageToSave);
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSError *error = nil;
+    if (![dataForPNGFile writeToFile:[documentsDirectory stringByAppendingPathComponent:imageName] options:NSAtomicWrite error:&error])
+    {
+        return;
+    }
+    
+    NSString*p  = [documentsDirectory stringByAppendingPathComponent:imageName];
+    NSLog(@"p : %@", p);
+}
 
 @end
