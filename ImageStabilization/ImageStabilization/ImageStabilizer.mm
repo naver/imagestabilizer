@@ -29,11 +29,11 @@ using namespace cv;
 
 void extractFeatureUsingBRISK(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
     // Set brisk parameters
-//    int Threshl=80;
-//    int Octaves=4; //(pyramid layer) from which the keypoint has been extracted
-//    float PatternScales=1.0f;
+    int Threshl=20;
+    int Octaves=3; //(pyramid layer) from which the keypoint has been extracted
+    float PatternScales=1.0f;
     
-    cv::Ptr<cv::FeatureDetector> detactor = cv::BRISK::create();
+    cv::Ptr<cv::FeatureDetector> detactor = cv::BRISK::create(Threshl, Octaves, PatternScales);
     detactor->detect(imageMat, keyPoints);
     detactor->compute(imageMat, keyPoints, descriptor);
 }
@@ -69,6 +69,57 @@ void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& de
     for(int i =0 ; i < keypoints.size(); i++){
         KeyPoint point = keypoints[i];
         [OpenCVUtils setPixelColor:resultImageMat posX:point.pt.x posY:point.pt.y size:pixel color:[UIColor redColor]];
+    }
+    
+    NSLog(@"Extracted %d points", keypoints.size());
+    
+    UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:resultImageMat];
+    return resultImage;
+}
+
+-(UIImage*) matchedFeature:(UIImage*)image1 anotherImage:(UIImage*)image2 representingPixelSize:(NSInteger)pixel{
+    Mat targetImageMat1 = [OpenCVUtils cvMatFromUIImage:image1];
+    Mat targetImageMat2 = [OpenCVUtils cvMatFromUIImage:image2];
+    Mat grayTargetImage1, grayTargetImage2;
+    cvtColor(targetImageMat1, grayTargetImage1, CV_BGR2GRAY);
+    cvtColor(targetImageMat2, grayTargetImage2, CV_BGR2GRAY);
+    
+    std::vector<cv::KeyPoint> keyPointsA, keyPointsB;
+    cv::Mat descriptorsA, descriptorsB;
+    extractFeatureUsingBRISK(grayTargetImage1, keyPointsA, descriptorsA);
+    extractFeatureUsingBRISK(grayTargetImage2, keyPointsB, descriptorsB);
+    
+    NSLog(@"Start of matching");
+    cv::BFMatcher matcher(cv::NORM_HAMMING);
+    std::vector< std::vector<DMatch> > nn_matches;
+    matcher.knnMatch(descriptorsA, descriptorsB, nn_matches, 2);
+    
+    vector<KeyPoint> matched1, matched2, inliers1, inliers2;
+    const float nn_match_ratio = 0.8f;
+    
+    vector<cv::Point2f> p1, p2;
+    
+    for(size_t i = 0; i < nn_matches.size(); i++) {
+        DMatch first = nn_matches[i][0];
+        float dist1 = nn_matches[i][0].distance;
+        float dist2 = nn_matches[i][1].distance;
+        if(dist1 < nn_match_ratio * dist2) {
+            matched1.push_back(keyPointsA[first.queryIdx]);
+            matched2.push_back(keyPointsB[first.trainIdx]);
+            
+            p1.push_back(keyPointsA[first.queryIdx].pt);
+            p2.push_back(keyPointsB[first.trainIdx].pt);
+        }
+    }
+    
+    NSLog(@"Points : %ld, Matched : %ld", keyPointsB.size() , matched2.size());
+    
+    Mat resultImageMat;
+    cvtColor(grayTargetImage2, resultImageMat, CV_GRAY2BGRA);
+    
+    for(int i =0 ; i < p2.size(); i++){
+        Point2f point = p2[i];
+        [OpenCVUtils setPixelColor:resultImageMat posX:point.x posY:point.y size:pixel color:[UIColor redColor]];
     }
     
     UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:resultImageMat];

@@ -17,9 +17,9 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_3 = 2,
 };
 
-#define DEFAULT_DATASET DATASET_1
+#define DEFAULT_DATASET DATASET_3
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
-#define TIMER_INIT_INTERVAL 1.0
+#define TIMER_INIT_INTERVAL 0.2
 
 @interface ViewController ()
 @property(nonatomic, strong) ImageStabilizer* stabilizer;
@@ -77,6 +77,21 @@ typedef NS_ENUM(NSInteger, DataSet){
         NSLog(@"Extract Feature result index : %d", i);
     }
     _showResults = YES;
+}
+- (IBAction)featureMatingClicked:(UIButton *)sender {
+    NSLog(@"Feature Matching Clicked");
+    _showResults = NO;
+    [self.resultImages removeAllObjects];
+
+    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+    
+    for( int i =1 ; i < [self.images count] ; i++){
+        UIImage* result = [self.stabilizer matchedFeature:[UIImage imageNamed:[self.images objectAtIndex:0]] anotherImage:[UIImage imageNamed:[self.images objectAtIndex:i]] representingPixelSize:REPRESENTING_FEATURE_PIXEL_SIZE];
+        [_resultImages addObject:result];
+        NSLog(@"Extract Feature result index : %d", i);
+    }
+    _showResults = YES;
+
 }
 
 - (IBAction)stabilizeImageClicked:(UIButton *)sender {

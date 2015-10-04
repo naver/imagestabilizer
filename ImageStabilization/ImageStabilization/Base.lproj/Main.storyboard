@@ -39,16 +39,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" alpha="0.69999998807907104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V0V-k9-4qP">
-                                <rect key="frame" x="454" y="70" width="84" height="30"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Stabilization">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="stabilizeImageClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NOQ-ox-aqi"/>
-                                </connections>
-                            </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="75C-tj-o8c">
                                 <rect key="frame" x="22" y="92" width="118" height="31"/>
                                 <constraints>
@@ -76,6 +66,27 @@
                                     <action selector="featureExtractionClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="02F-ac-yqS"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" alpha="0.69999998807907104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yv0-bi-7zm" userLabel="Feature matching">
+                                <rect key="frame" x="454" y="70" width="120" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Feature Matching">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="featureExtractionClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2gn-45-JRC"/>
+                                    <action selector="featureMatingClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9q5-VR-Lu3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" alpha="0.69999998807907104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V0V-k9-4qP">
+                                <rect key="frame" x="454" y="100" width="84" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Stabilization">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="stabilizeImageClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NOQ-ox-aqi"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -88,9 +99,12 @@
                             <constraint firstItem="4Gq-qW-vmq" firstAttribute="leading" secondItem="oSR-rs-0Cz" secondAttribute="leading" constant="20" id="JXE-uu-ySk"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="leading" secondItem="oSR-rs-0Cz" secondAttribute="leading" id="PvF-UA-42G"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="top" secondItem="gHJ-0A-xrY" secondAttribute="top" constant="-20" id="X6A-Yu-GYT"/>
+                            <constraint firstItem="V0V-k9-4qP" firstAttribute="top" secondItem="yv0-bi-7zm" secondAttribute="bottom" id="cLf-GR-ee7"/>
                             <constraint firstItem="75C-tj-o8c" firstAttribute="leading" secondItem="d0f-o3-KAi" secondAttribute="leading" id="dG1-Tq-n4w"/>
+                            <constraint firstItem="yv0-bi-7zm" firstAttribute="top" secondItem="VTr-cX-lED" secondAttribute="bottom" id="ef2-UU-TiQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="sPs-sH-RXZ" secondAttribute="trailing" constant="-16" id="i8r-hR-dlW"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.5:1" id="oxX-rz-aKT"/>
+                            <constraint firstItem="yv0-bi-7zm" firstAttribute="leading" secondItem="VTr-cX-lED" secondAttribute="leading" id="pLU-wt-MAI"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="pkn-ru-Pnp"/>
                             <constraint firstItem="d0f-o3-KAi" firstAttribute="leading" secondItem="gHJ-0A-xrY" secondAttribute="leading" id="qW9-Q8-Eaf"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="leading" secondItem="gHJ-0A-xrY" secondAttribute="leading" constant="-20" id="qYE-wY-2kU"/>
@@ -100,6 +114,11 @@
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="width" secondItem="oSR-rs-0Cz" secondAttribute="width" id="tcC-uq-UZy"/>
                             <constraint firstItem="d0f-o3-KAi" firstAttribute="top" secondItem="gHJ-0A-xrY" secondAttribute="bottom" constant="30" id="tvy-Xr-gqB"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Aub-kI-fEG"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="imageViewer1" destination="sPs-sH-RXZ" id="OSK-GW-IdN"/>
