@@ -10,6 +10,15 @@
 #import "FeatureExtractor.h"
 #import "ImageStabilizer.h"
 
+
+typedef NS_ENUM(NSInteger, DataSet){
+    DATASET_1 = 0,
+    DATASET_2 = 1,
+    DATASET_3 = 2,
+};
+
+#define DEFAULT_DATASET DATASET_1
+
 @interface ViewController ()
 @property(nonatomic, strong) ImageStabilizer* stabilizer;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer1;
@@ -19,6 +28,7 @@
 @property (nonatomic, strong) NSMutableArray* resultImages;
 @property (nonatomic) NSInteger currentIndex;
 @property (nonatomic) BOOL showResults;
+@property (nonatomic) DataSet datasetIndex;
 @end
 
 @implementation ViewController
@@ -26,6 +36,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    _datasetIndex = DEFAULT_DATASET;
     
     self.stabilizer = [[ImageStabilizer alloc] init];
     [self setDefaultImages];
@@ -78,11 +89,14 @@
 }
 
 -(void) setDefaultImages{
-    
-//    self.images = @[@"data_1_1.jpg",@"data_1_2.jpg",@"data_1_3.jpg",@"data_1_4.jpg",@"data_1_5.jpg",@"data_1_6.jpg"];
-//    self.images = @[@"data_2_1.jpg",@"data_2_2.jpg",@"data_2_3.jpg",@"data_2_4.jpg",@"data_2_5.jpg",@"data_2_6.jpg"];
-    self.images = @[@"data_3_1.jpg",@"data_3_2.jpg",@"data_3_3.jpg",@"data_3_4.jpg",@"data_3_5.jpg"];
-    
+    if( _datasetIndex == DATASET_1){
+        self.images = @[@"data_1_1.jpg",@"data_1_2.jpg",@"data_1_3.jpg",@"data_1_4.jpg",@"data_1_5.jpg",@"data_1_6.jpg"];
+    }else if( _datasetIndex == DATASET_2){
+        self.images = @[@"data_2_1.jpg",@"data_2_2.jpg",@"data_2_3.jpg",@"data_2_4.jpg",@"data_2_5.jpg",@"data_2_6.jpg"];
+    }
+    else if( _datasetIndex == DATASET_3){
+        self.images = @[@"data_3_1.jpg",@"data_3_2.jpg",@"data_3_3.jpg",@"data_3_4.jpg",@"data_3_5.jpg"];
+    }
 }
 
 @end
