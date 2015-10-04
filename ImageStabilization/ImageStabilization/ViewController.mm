@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_3 = 2,
 };
 
-#define DEFAULT_DATASET DATASET_3
+#define DEFAULT_DATASET DATASET_1
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 1.0
 
@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     self.showResults = NO;
     
     _animatinonInterval = TIMER_INIT_INTERVAL;
-    [self.timerSlider setValue:_animatinonInterval/2.0];
+    [self.timerSlider setValue:_animatinonInterval];
      
      self.timer = [NSTimer scheduledTimerWithTimeInterval:_animatinonInterval target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
     [self.imageViewer1 setImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, DataSet){
 
 - (IBAction)sliderValueChanged:(UISlider *)sender {
     NSLog(@"Slider Value : %lf",sender.value);        
-    _animatinonInterval = sender.value*2.0;
+    _animatinonInterval = sender.value;
     [self.timer invalidate];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:_animatinonInterval target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
 }
