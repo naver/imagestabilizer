@@ -16,5 +16,6 @@
 
 @interface ImageStabilizer : NSObject
 -(void) setStabilizeSourceImage:(UIImage*) sourceImage;
+-(UIImage*) extractFeature:(UIImage*)targetImage representingPixelSize:(NSInteger)pixel;
 -(UIImage*) stabilizeImage:(UIImage*)targetImage;
 @end

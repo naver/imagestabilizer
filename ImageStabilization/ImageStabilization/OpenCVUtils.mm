@@ -129,4 +129,23 @@ using namespace cv;
     NSLog(@"p : %@", p);
 }
 
++ (cv::Vec4b) convertUIColorToVect:(UIColor*)color{
+    CGFloat r,g,b,a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    cv::Vec4b c = {static_cast<unsigned char>(r*255), static_cast<unsigned char>(g*255), static_cast<unsigned char>(b*255), static_cast<unsigned char>(a*255)};
+    return c;
+}
+
++ (void)setPixelColor:(cv::Mat)cvMat posX:(NSInteger)posX posY:(NSInteger)posY size:(NSInteger)size color:(UIColor *)color{
+//    cv::Vec4b c = cvMat.at<cv::Vec4b>(cv::Point(posY, posX));
+    
+    cv::Vec4b c = [OpenCVUtils convertUIColorToVect:color];
+    
+    for( NSInteger dx = (posX-size/2); dx < (posX+size/2); dx++){
+        for( NSInteger dy = (posY - size/2); dy < (posY+size/2); dy++){
+            cvMat.at<cv::Vec4b>(dy, dx) = c;
+        }
+    }
+}
+
 @end

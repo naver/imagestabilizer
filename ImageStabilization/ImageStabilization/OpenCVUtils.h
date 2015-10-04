@@ -15,4 +15,6 @@
 + (UIImage *)UIImageFromCVMat:(cv::Mat)cvMat;
 + (cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2;
 + (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName;
++ (void)setPixelColor:(cv::Mat)cvMat posX:(NSInteger)posX posY:(NSInteger)posY size:(NSInteger)size color:(UIColor *)color;
++ (cv::Vec4b) convertUIColorToVect:(UIColor*)color;
 @end

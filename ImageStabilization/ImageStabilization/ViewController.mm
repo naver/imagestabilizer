@@ -17,16 +17,20 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_3 = 2,
 };
 
-#define DEFAULT_DATASET DATASET_1
+#define DEFAULT_DATASET DATASET_3
+#define REPRESENTING_FEATURE_PIXEL_SIZE 10
+#define TIMER_INIT_INTERVAL 1.0
 
 @interface ViewController ()
 @property(nonatomic, strong) ImageStabilizer* stabilizer;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer2;
+@property (weak, nonatomic) IBOutlet UISlider *timerSlider;
 @property (nonatomic, strong) NSTimer* timer;
 @property (nonatomic, strong) NSArray* images;
 @property (nonatomic, strong) NSMutableArray* resultImages;
 @property (nonatomic) NSInteger currentIndex;
+@property (nonatomic) CGFloat animatinonInterval;
 @property (nonatomic) BOOL showResults;
 @property (nonatomic) DataSet datasetIndex;
 @end
@@ -42,7 +46,12 @@ typedef NS_ENUM(NSInteger, DataSet){
     [self setDefaultImages];
     self.currentIndex = 0;
     self.showResults = NO;
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
+    
+    _animatinonInterval = TIMER_INIT_INTERVAL;
+    [self.timerSlider setValue:_animatinonInterval/2.0];
+     
+     self.timer = [NSTimer scheduledTimerWithTimeInterval:_animatinonInterval target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
+    [self.imageViewer1 setImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
     [self.imageViewer2 setImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
     
     _resultImages = [NSMutableArray array];
@@ -57,6 +66,19 @@ typedef NS_ENUM(NSInteger, DataSet){
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (IBAction)featureExtractionClicked:(UIButton *) sender{
+    NSLog(@"Feature Extraction Clicked");
+    _showResults = NO;
+    [self.resultImages removeAllObjects];
+    for( int i =0 ; i < [self.images count] ; i++){
+        UIImage* result = [self.stabilizer extractFeature:[UIImage imageNamed:[self.images objectAtIndex:i]] representingPixelSize:REPRESENTING_FEATURE_PIXEL_SIZE];
+        [_resultImages addObject:result];
+        NSLog(@"Extract Feature result index : %d", i);
+    }
+    _showResults = YES;
+}
+
 - (IBAction)stabilizeImageClicked:(UIButton *)sender {
     NSLog(@"Stabilize start");
 
@@ -98,5 +120,13 @@ typedef NS_ENUM(NSInteger, DataSet){
         self.images = @[@"data_3_1.jpg",@"data_3_2.jpg",@"data_3_3.jpg",@"data_3_4.jpg",@"data_3_5.jpg"];
     }
 }
+
+- (IBAction)sliderValueChanged:(UISlider *)sender {
+    NSLog(@"Slider Value : %lf",sender.value);        
+    _animatinonInterval = sender.value*2.0;
+    [self.timer invalidate];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:_animatinonInterval target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
+}
+
 
 @end

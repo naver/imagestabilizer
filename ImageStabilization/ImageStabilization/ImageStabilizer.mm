@@ -54,6 +54,26 @@ void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& de
     mser->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
 }
 
+-(UIImage*) extractFeature:(UIImage *)targetImage representingPixelSize:(NSInteger)pixel{
+    Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:targetImage];
+    Mat grayTargetImage;
+    cvtColor(targetImageMat, grayTargetImage, CV_BGR2GRAY);
+    
+    std::vector<cv::KeyPoint> keypoints;
+    cv::Mat descriptors;
+    extractFeatureUsingBRISK(grayTargetImage, keypoints, descriptors);
+    
+    Mat resultImageMat;
+    cvtColor(grayTargetImage, resultImageMat, CV_GRAY2BGRA);
+    
+    for(int i =0 ; i < keypoints.size(); i++){
+        KeyPoint point = keypoints[i];
+        [OpenCVUtils setPixelColor:resultImageMat posX:point.pt.x posY:point.pt.y size:pixel color:[UIColor redColor]];
+    }
+    
+    UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:resultImageMat];
+    return resultImage;
+}
 
 -(UIImage*) stabilizeImage:(UIImage*)targetImage{
     Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:targetImage];
@@ -130,7 +150,7 @@ void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& de
     res = [OpenCVUtils mergeImage:self.sourceImageMat another:res];
     
     UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:res];
-    [OpenCVUtils saveImage:resultImage fileName:[NSString stringWithFormat:@"result_%ld",_saveImageIndex++]];
+//    [OpenCVUtils saveImage:resultImage fileName:[NSString stringWithFormat:@"result_%ld",_saveImageIndex++]];
 
     return resultImage;
 }
