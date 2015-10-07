@@ -78,18 +78,32 @@ typedef NS_ENUM(NSInteger, DataSet){
     }
     _showResults = YES;
 }
-- (IBAction)featureMatingClicked:(UIButton *)sender {
+
+- (IBAction)featureMatchingClicked:(UIButton *)sender {
     NSLog(@"Feature Matching Clicked");
     _showResults = NO;
     [self.resultImages removeAllObjects];
 
-    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+//    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+//    
+//    for( int i =1 ; i < [self.images count] ; i++){
+//        UIImage* result = [self.stabilizer matchedFeature:[UIImage imageNamed:[self.images objectAtIndex:i-1]] anotherImage:[UIImage imageNamed:[self.images objectAtIndex:i]] representingPixelSize:REPRESENTING_FEATURE_PIXEL_SIZE];
+//        [_resultImages addObject:result];
+//        NSLog(@"Extract Feature result index : %d", i);
+//    }
     
-    for( int i =1 ; i < [self.images count] ; i++){
-        UIImage* result = [self.stabilizer matchedFeature:[UIImage imageNamed:[self.images objectAtIndex:0]] anotherImage:[UIImage imageNamed:[self.images objectAtIndex:i]] representingPixelSize:REPRESENTING_FEATURE_PIXEL_SIZE];
-        [_resultImages addObject:result];
-        NSLog(@"Extract Feature result index : %d", i);
+    NSMutableArray* targetImages = [NSMutableArray array];
+    
+    for(int i = 0; i < [self.images count]; i++){
+        [targetImages addObject:[UIImage imageNamed:self.images[i]]];
     }
+    
+    NSArray* result = [self.stabilizer matchedFeatureWithImageList:targetImages representingPixelSize:REPRESENTING_FEATURE_PIXEL_SIZE];
+    
+    for(int i  = 0; i < [result count]; i++){
+        [self.resultImages addObject:[result objectAtIndex:i]];
+    }
+    
     _showResults = YES;
 
 }

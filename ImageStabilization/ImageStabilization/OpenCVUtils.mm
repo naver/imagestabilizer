@@ -148,4 +148,21 @@ using namespace cv;
     }
 }
 
++(void)writeFile:(NSString*)fileName data:(NSString*) data{
+    // Destination for file that is writeable
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSURL *documentsURL = [NSURL URLWithString:documentsDirectory];
+    
+    NSURL *destinationURL = [documentsURL URLByAppendingPathComponent:fileName];
+
+
+    
+    // Now you can write to the file....
+
+    NSError *writeError = nil;
+    [data writeToFile:[destinationURL absoluteString] atomically:YES encoding:NSUTF8StringEncoding error:&writeError];
+    NSLog(@"File : %@", [destinationURL absoluteString]);
+}
+
 @end

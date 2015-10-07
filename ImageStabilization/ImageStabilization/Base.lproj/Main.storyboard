@@ -73,8 +73,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="featureExtractionClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2gn-45-JRC"/>
-                                    <action selector="featureMatingClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9q5-VR-Lu3"/>
+                                    <action selector="featureMatchingClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3kj-60-B34"/>
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.69999998807907104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V0V-k9-4qP">

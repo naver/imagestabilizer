@@ -126,6 +126,132 @@ void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& de
     return resultImage;
 }
 
+bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
+    const float nn_match_ratio = 0.9f;
+    float dist1 = nn_matches[queryIdx][0].distance;
+    float dist2 = nn_matches[queryIdx][1].distance;
+    if(dist1 < nn_match_ratio * dist2) {
+        return true;
+    }else{
+        return false;
+    }
+}
+
+-(NSArray*) matchedFeatureWithImageList:(NSArray *)images representingPixelSize:(NSInteger)pixel{
+    int numOfImages = [images count];
+
+    vector<Mat> grayImages;
+    vector< std::vector<cv::KeyPoint> > keyPointsVec;
+    vector<Mat> descriptorsVec;
+    
+    for(int i =0 ; i < numOfImages; i++){
+        Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:images[i]];
+        Mat grayImageMat;
+        cvtColor(targetImageMat, grayImageMat, CV_BGR2GRAY);
+        grayImages.push_back(grayImageMat);
+        
+        std::vector<cv::KeyPoint> keyPoints;
+        Mat descriptors;
+        
+        extractFeatureUsingBRISK(grayImageMat, keyPoints, descriptors);
+        keyPointsVec.push_back(keyPoints);
+        descriptorsVec.push_back(descriptors);
+        
+        NSLog(@"Extract Feature : %d, extracted : %d", i, keyPoints.size());
+    }
+    
+    NSLog(@"Start of matching");
+    cv::BFMatcher matcher(cv::NORM_HAMMING);
+    std::vector< std::vector< std::vector<DMatch> > > matchedList;
+    
+    for( int i =1; i < numOfImages; i++){
+        std::vector< std::vector<DMatch> > nn_matches;
+        matcher.knnMatch(descriptorsVec[i-1], descriptorsVec[i], nn_matches, 2);
+        matchedList.push_back(nn_matches);
+        
+        NSLog(@"Index : %d", i);
+        for( int j = 0; j < nn_matches.size(); j++){
+            NSLog(@"QuaryIdx : %d, TrainIdx : %d",nn_matches[j][0].queryIdx, nn_matches[j][0].trainIdx);
+        }
+    }
+    NSLog(@"Finished Matching");
+    
+    std::vector< std::vector<int> > queryIndexes;
+    std::vector< std::vector<DMatch> > first_nn_matches = matchedList[0];
+    
+    for( int i =0 ;i < first_nn_matches.size(); i++){
+        std::vector<int> queries;
+        int queryIdx = first_nn_matches[i][0].queryIdx;
+        int trainIdx = first_nn_matches[i][0].trainIdx;
+        queries.push_back( queryIdx );
+        queries.push_back( trainIdx );
+        
+        if(isInliner(first_nn_matches, queryIdx)){
+            bool inliner = false;
+            
+            for(int j = 1; j < matchedList.size(); j++){
+                std::vector< std::vector<DMatch> > nn_matcher = matchedList[j];
+                int nextTrainIdx = nn_matcher[trainIdx][0].trainIdx;
+                
+                if(isInliner(nn_matcher, trainIdx)){
+                    queries.push_back(nextTrainIdx);
+                    trainIdx = nextTrainIdx;
+                    inliner = true;
+                }else{
+                    inliner = false;
+                    break;
+                }
+            }
+            
+            if(inliner){
+                queryIndexes.push_back(queries);
+            }
+        }
+    }
+    
+    NSLog(@"Matched Num : %d", queryIndexes.size());
+    
+    
+    vector<Mat> resultMats;
+    
+    for( int i = 0; i < grayImages.size(); i++){
+        Mat resultImageMat;
+        cvtColor(grayImages[i], resultImageMat, CV_GRAY2BGRA);
+        resultMats.push_back(resultImageMat);
+    }
+    
+//    NSMutableString* pointStr = [NSMutableString new];
+//    
+//    for( int i =0; i < queryIndexes.size(); i++){
+//        std::vector<int> queries = queryIndexes[i];
+//        
+//        for(int j = 0; j < queries.size(); j++){
+//            int index = queries[j];
+//            Point2f point = keyPointsVec[j][index].pt;
+//            [OpenCVUtils setPixelColor:resultMats[j] posX:point.x posY:point.y size:pixel color:[UIColor redColor]];
+//            
+//            if(j == 0){
+//                [pointStr appendFormat:@"%lf\t%lf", point.x, point.y];
+//            }else{
+//                [pointStr appendFormat:@"\t%lf\t%lf", point.x, point.y];
+//            }
+//        }
+//        
+//        [pointStr appendString:@"\n"];
+//    }
+//    
+//    NSLog(@"pointStr : %@", pointStr);
+//    [OpenCVUtils writeFile:@"point_data" data:pointStr];
+    
+    NSMutableArray* results = [NSMutableArray array];
+    for( int i = 0; i < numOfImages; i++){
+        UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:resultMats[i]];
+        [results addObject:resultImage];
+    }
+    
+    return results;
+}
+
 -(UIImage*) stabilizeImage:(UIImage*)targetImage{
     Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:targetImage];
 //    Mat grayTargetImage = [OpenCVUtils cvMatFromUIImage:targetImage];;

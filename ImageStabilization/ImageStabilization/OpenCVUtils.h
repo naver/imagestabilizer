@@ -17,4 +17,6 @@
 + (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName;
 + (void)setPixelColor:(cv::Mat)cvMat posX:(NSInteger)posX posY:(NSInteger)posY size:(NSInteger)size color:(UIColor *)color;
 + (cv::Vec4b) convertUIColorToVect:(UIColor*)color;
+
++(void)writeFile:(NSString*)fileName data:(NSString*) data;
 @end
