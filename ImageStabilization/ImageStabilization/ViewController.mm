@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, DataSet){
 
 #define DEFAULT_DATASET DATASET_1
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
-#define TIMER_INIT_INTERVAL 1.0
+#define TIMER_INIT_INTERVAL 0.2
 
 @interface ViewController ()
 @property(nonatomic, strong) ImageStabilizer* stabilizer;
@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, DataSet){
 @property (nonatomic) CGFloat animatinonInterval;
 @property (nonatomic) BOOL showResults;
 @property (nonatomic) DataSet datasetIndex;
+@property (nonatomic) NSInteger animationDirection;
 @end
 
 @implementation ViewController
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     _datasetIndex = DEFAULT_DATASET;
+    _animationDirection = 1;
     
     self.stabilizer = [[ImageStabilizer alloc] init];
     [self setDefaultImages];
@@ -79,19 +81,60 @@ typedef NS_ENUM(NSInteger, DataSet){
     _showResults = YES;
 }
 
+- (IBAction)featureMatchingClicked:(UIButton *)sender {
+    NSLog(@"Feature Matching Clicked");
+    _showResults = NO;
+    [self.resultImages removeAllObjects];
+
+//    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+//    
+//    for( int i =1 ; i < [self.images count] ; i++){
+//        UIImage* result = [self.stabilizer matchedFeature:[UIImage imageNamed:[self.images objectAtIndex:i-1]] anotherImage:[UIImage imageNamed:[self.images objectAtIndex:i]] representingPixelSize:REPRESENTING_FEATURE_PIXEL_SIZE];
+//        [_resultImages addObject:result];
+//        NSLog(@"Extract Feature result index : %d", i);
+//    }
+    
+    NSMutableArray* targetImages = [NSMutableArray array];
+    
+    for(int i = 0; i < [self.images count]; i++){
+        [targetImages addObject:[UIImage imageNamed:self.images[i]]];
+    }
+    
+    NSArray* result = [self.stabilizer matchedFeatureWithImageList:targetImages representingPixelSize:REPRESENTING_FEATURE_PIXEL_SIZE];
+    
+    for(int i  = 0; i < [result count]; i++){
+        [self.resultImages addObject:[result objectAtIndex:i]];
+    }
+    
+    _showResults = YES;
+
+}
+
 - (IBAction)stabilizeImageClicked:(UIButton *)sender {
     NSLog(@"Stabilize start");
 
     _showResults = NO;
     [self.resultImages removeAllObjects];
-    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
-    [self.stabilizer setStabilizeSourceImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
-
-    for( int i =1; i < [self.images count] ; i++){
-        UIImage* result = [self.stabilizer stabilizeImage:[UIImage imageNamed:[self.images objectAtIndex:i]]];
-        [self.resultImages addObject:result];
-        NSLog(@"Stabilize Result Index : %d", i);
+//    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+//    [self.stabilizer setStabilizeSourceImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+//
+//    for( int i =1; i < [self.images count] ; i++){
+//        UIImage* result = [self.stabilizer stabilizeImage:[UIImage imageNamed:[self.images objectAtIndex:i]]];
+//        [self.resultImages addObject:result];
+//        NSLog(@"Stabilize Result Index : %d", i);
+//    }
+    NSMutableArray* targetImages = [NSMutableArray array];
+    
+    for(int i = 0; i < [self.images count]; i++){
+        [targetImages addObject:[UIImage imageNamed:self.images[i]]];
     }
+    
+    NSArray* result = [self.stabilizer stabilizedWithImageList:targetImages];
+    
+    for(int i  = 0; i < [result count]; i++){
+        [self.resultImages addObject:[result objectAtIndex:i]];
+    }
+    
     _showResults = YES;
 }
 
@@ -103,9 +146,13 @@ typedef NS_ENUM(NSInteger, DataSet){
         [_imageViewer2 setImage:[_resultImages objectAtIndex:_currentIndex]];
     }
     
-    _currentIndex++;
+    _currentIndex = _currentIndex + _animationDirection;
     if(_currentIndex >= [_images count]){
+        _currentIndex = [_images count] -1;
+        _animationDirection = -1;
+    }else if (_currentIndex < 0){
         _currentIndex = 0;
+        _animationDirection = 1;
     }
     
 }
