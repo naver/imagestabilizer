@@ -13,7 +13,8 @@ All this process are simply implemented using OpenCV
 
 
 ## Screenshot
-![demo.gif](/docs/demo.gif)
+![result1.gif](/docs/result1.gif)
+![result2.gif](/docs/result2.gif)
 
 Top animated image shows original images and bottom animated image is stabilized images using ImageStabilizer.
 
