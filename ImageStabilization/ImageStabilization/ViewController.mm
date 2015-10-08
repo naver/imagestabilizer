@@ -113,14 +113,26 @@ typedef NS_ENUM(NSInteger, DataSet){
 
     _showResults = NO;
     [self.resultImages removeAllObjects];
-    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
-    [self.stabilizer setStabilizeSourceImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
-
-    for( int i =1; i < [self.images count] ; i++){
-        UIImage* result = [self.stabilizer stabilizeImage:[UIImage imageNamed:[self.images objectAtIndex:i]]];
-        [self.resultImages addObject:result];
-        NSLog(@"Stabilize Result Index : %d", i);
+//    [self.resultImages addObject:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+//    [self.stabilizer setStabilizeSourceImage:[UIImage imageNamed:[self.images objectAtIndex:0]]];
+//
+//    for( int i =1; i < [self.images count] ; i++){
+//        UIImage* result = [self.stabilizer stabilizeImage:[UIImage imageNamed:[self.images objectAtIndex:i]]];
+//        [self.resultImages addObject:result];
+//        NSLog(@"Stabilize Result Index : %d", i);
+//    }
+    NSMutableArray* targetImages = [NSMutableArray array];
+    
+    for(int i = 0; i < [self.images count]; i++){
+        [targetImages addObject:[UIImage imageNamed:self.images[i]]];
     }
+    
+    NSArray* result = [self.stabilizer stabilizedWithImageList:targetImages];
+    
+    for(int i  = 0; i < [result count]; i++){
+        [self.resultImages addObject:[result objectAtIndex:i]];
+    }
+    
     _showResults = YES;
 }
 
