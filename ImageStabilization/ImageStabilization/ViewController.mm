@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, DataSet){
 @property (nonatomic) CGFloat animatinonInterval;
 @property (nonatomic) BOOL showResults;
 @property (nonatomic) DataSet datasetIndex;
+@property (nonatomic) NSInteger animationDirection;
 @end
 
 @implementation ViewController
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     _datasetIndex = DEFAULT_DATASET;
+    _animationDirection = 1;
     
     self.stabilizer = [[ImageStabilizer alloc] init];
     [self setDefaultImages];
@@ -144,9 +146,13 @@ typedef NS_ENUM(NSInteger, DataSet){
         [_imageViewer2 setImage:[_resultImages objectAtIndex:_currentIndex]];
     }
     
-    _currentIndex++;
+    _currentIndex = _currentIndex + _animationDirection;
     if(_currentIndex >= [_images count]){
+        _currentIndex = [_images count] -1;
+        _animationDirection = -1;
+    }else if (_currentIndex < 0){
         _currentIndex = 0;
+        _animationDirection = 1;
     }
     
 }

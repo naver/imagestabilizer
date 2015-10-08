@@ -431,6 +431,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
     
     for( int i = 1; i < numOfImages; i++){
         Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
+//        Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
         
         cv::Mat H = cv::Mat(3,3,R.type());
         H.at<double>(0,0) = R.at<double>(0,0);
@@ -449,6 +450,9 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         int cols = targetImageMats[i].cols;
         
         cv::Mat res(rows, cols, CV_8UC4);
+        cv::Mat mask(rows, cols, CV_8UC4);
+        mask.setTo(1);
+        [OpenCVUtils removeEdge:mask edge:1];
         
         if(i==1){
             prevH = H;
@@ -457,7 +461,10 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         }
         
         warpPerspective(targetImageMats[i], res, prevH, cv::Size(rows, cols));
-        res = [OpenCVUtils mergeImage:targetImageMats[0] another:res];
+        warpPerspective(mask, mask, prevH, cv::Size(rows, cols));
+
+//        res = [OpenCVUtils mergeImage:targetImageMats[0] another:res];
+        res = [OpenCVUtils mergeImage:resultMats[0] another:res mask:mask];
         resultMats.push_back(res);
     }
     

@@ -112,6 +112,44 @@ using namespace cv;
     return  result;
 }
 
++(cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2 mask:(cv::Mat)mask{
+    cv::Mat result(image1.rows, image1.cols, CV_8UC4);
+    image1.copyTo(result);
+    image2.copyTo(result, mask);
+    return result;
+}
+
++(cv::Mat) removeEdge:(cv::Mat)image edge:(NSInteger)edgeSize{
+    int rows = image.rows;
+    int cols = image.cols;
+    
+    for( int row = 0 ; row < edgeSize; row++){
+        for( int col = 0; col < cols; col++){
+            image.at<cv::Vec4b>(col, row) = 0;
+        }
+    }
+    
+    for( int row = rows-edgeSize-1 ; row < rows; row++){
+        for( int col = 0; col < cols; col++){
+            image.at<cv::Vec4b>(col, row) = 0;
+        }
+    }
+    
+    for( int row = 0; row < rows; row++){
+        for( int col = 0; col < edgeSize; col++){
+            image.at<cv::Vec4b>(col, row) = 0;
+        }
+    }
+    
+    for( int row = 0; row < rows; row++){
+        for( int col = cols-edgeSize-1; col < cols; col++){
+            image.at<cv::Vec4b>(col, row) = 0;
+        }
+    }
+    
+    return image;
+}
+
 + (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName
 {
     NSData *dataForPNGFile = UIImagePNGRepresentation(imageToSave);
