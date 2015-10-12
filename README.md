@@ -46,6 +46,7 @@ So I want to improve this code to use GPU like GPUImage.
 ## References
 * http://stackoverflow.com/questions/13423884/how-to-use-brisk-in-opencv
 * http://docs.opencv.org/master/db/d70/tutorial_akaze_matching.html#gsc.tab=0
+* https://www.willowgarage.com/sites/default/files/orb_final.pdf
 
 ## License
 ImageStabilizerIOS is licensed under the Apache License, Version 2.0.
