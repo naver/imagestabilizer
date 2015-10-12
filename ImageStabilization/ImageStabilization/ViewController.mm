@@ -15,9 +15,10 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_1 = 0,
     DATASET_2 = 1,
     DATASET_3 = 2,
+    DATASET_4 = 3,
 };
 
-#define DEFAULT_DATASET DATASET_1
+#define DEFAULT_DATASET DATASET_4
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 0.2
 
@@ -165,7 +166,10 @@ typedef NS_ENUM(NSInteger, DataSet){
     }
     else if( _datasetIndex == DATASET_3){
         self.images = @[@"data_3_1.jpg",@"data_3_2.jpg",@"data_3_3.jpg",@"data_3_4.jpg",@"data_3_5.jpg"];
+    }else if( _datasetIndex == DATASET_4){
+        self.images = @[@"data_4_1.jpg",@"data_4_2.jpg",@"data_4_3.jpg",@"data_4_4.jpg",@"data_4_5.jpg"];
     }
+
 }
 
 - (IBAction)sliderValueChanged:(UISlider *)sender {
