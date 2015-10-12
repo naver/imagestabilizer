@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_4 = 3,
 };
 
-#define DEFAULT_DATASET DATASET_4
+#define DEFAULT_DATASET DATASET_1
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 0.2
 
@@ -137,6 +137,17 @@ typedef NS_ENUM(NSInteger, DataSet){
     }
     
     _showResults = YES;
+}
+- (IBAction)compareExtractorClicked:(id)sender {
+    NSLog(@"Compare Extractor started");
+    NSMutableArray* targetImages = [NSMutableArray array];
+    
+    for(int i = 0; i < [self.images count]; i++){
+        [targetImages addObject:[UIImage imageNamed:self.images[i]]];
+    }
+
+    [self.stabilizer compareExtractor:targetImages];
+    
 }
 
 -(void) timerTick{

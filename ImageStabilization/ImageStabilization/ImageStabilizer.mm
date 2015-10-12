@@ -34,8 +34,7 @@ void extractFeatureUsingBRISK(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& d
     float PatternScales=1.0f;
     
     cv::Ptr<cv::FeatureDetector> detactor = cv::BRISK::create(Threshl, Octaves, PatternScales);
-    detactor->detect(imageMat, keyPoints);
-    detactor->compute(imageMat, keyPoints, descriptor);
+    detactor->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
 }
 
 void extractFeatureUsingAkaze(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
@@ -49,9 +48,11 @@ void extractFeatureUsingORB(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& des
     orb->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
 }
 
-void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
-    Ptr<MSER> mser = MSER::create();
-    mser->detectAndCompute(imageMat, noArray(), keyPoints, descriptor);
+void extractFeatureUsingFAST(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
+    Ptr<FastFeatureDetector> fast = FastFeatureDetector::create();
+    fast->detect(imageMat, keyPoints);
+    Ptr<ORB> orb = ORB::create();
+    orb->compute(imageMat, keyPoints, descriptor);
 }
 
 -(UIImage*) extractFeature:(UIImage *)targetImage representingPixelSize:(NSInteger)pixel{
@@ -61,7 +62,7 @@ void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& de
     
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
-    extractFeatureUsingBRISK(grayTargetImage, keypoints, descriptors);
+    extractFeatureUsingFAST(grayTargetImage, keypoints, descriptors);
     
     Mat resultImageMat;
     cvtColor(grayTargetImage, resultImageMat, CV_GRAY2BGRA);
@@ -86,8 +87,8 @@ void extractFEatureUsingMSER(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& de
     
     std::vector<cv::KeyPoint> keyPointsA, keyPointsB;
     cv::Mat descriptorsA, descriptorsB;
-    extractFeatureUsingBRISK(grayTargetImage1, keyPointsA, descriptorsA);
-    extractFeatureUsingBRISK(grayTargetImage2, keyPointsB, descriptorsB);
+    extractFeatureUsingFAST(grayTargetImage1, keyPointsA, descriptorsA);
+    extractFeatureUsingFAST(grayTargetImage2, keyPointsB, descriptorsB);
     
     NSLog(@"Start of matching");
     cv::BFMatcher matcher(cv::NORM_HAMMING);
@@ -153,7 +154,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         std::vector<cv::KeyPoint> keyPoints;
         Mat descriptors;
         
-        extractFeatureUsingBRISK(grayImageMat, keyPoints, descriptors);
+        extractFeatureUsingFAST(grayImageMat, keyPoints, descriptors);
         keyPointsVec.push_back(keyPoints);
         descriptorsVec.push_back(descriptors);
         
@@ -265,8 +266,8 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
     //    extractFeatureUsingBRISK(_graySourceImage, keypointsA, descriptorsA);
     //    extractFeatureUsingBRISK(grayTargetImage, keypointsB, descriptorsB);
     
-    extractFeatureUsingORB(_sourceImageMat, keypointsA, descriptorsA);
-    extractFeatureUsingORB(targetImageMat, keypointsB, descriptorsB);
+    extractFeatureUsingFAST(_sourceImageMat, keypointsA, descriptorsA);
+    extractFeatureUsingFAST(targetImageMat, keypointsB, descriptorsB);
     
     //    extractFEatureUsingMSER(_graySourceImage, keypointsA, descriptorsA);
     //    extractFEatureUsingMSER(grayTargetImage, keypointsB, descriptorsB);
@@ -333,7 +334,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
 }
 
 -(NSArray*) stabilizedWithImageList:(NSArray *)images{
-    int numOfImages = [images count];
+    int numOfImages = [images count] ;
     
     vector<Mat> grayImages;
     vector<Mat> targetImageMats;
@@ -349,8 +350,9 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         
         std::vector<cv::KeyPoint> keyPoints;
         Mat descriptors;
-        
-        extractFeatureUsingBRISK(grayImageMat, keyPoints, descriptors);
+
+        NSLog(@"Extract Started");
+        extractFeatureUsingFAST(grayImageMat, keyPoints, descriptors);
         keyPointsVec.push_back(keyPoints);
         descriptorsVec.push_back(descriptors);
         
@@ -406,7 +408,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         }
     }
     
-    NSLog(@"Matched Num : %d", queryIndexes.size());
+    NSLog(@"Find Inliner Matched Num : %d", queryIndexes.size());
     
     vector< vector<cv::Point2f> > resultFeature;
     for( int i = 0; i < numOfImages; i++){
@@ -429,6 +431,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
     
     Mat prevH;
     
+    NSLog(@"estimate homograpy start");
     for( int i = 1; i < numOfImages; i++){
         Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
 //        Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
@@ -468,6 +471,8 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         resultMats.push_back(res);
     }
     
+    NSLog(@"end ot estimate");
+    
     NSMutableArray* results = [NSMutableArray array];
     for( int i = 0; i < numOfImages; i++){
         UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:resultMats[i]];
@@ -477,6 +482,57 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
     return results;
 }
 
+-(void) compareExtractor:(NSArray*)images{
+    int numOfImages = [images count] ;
+    
+    vector<Mat> grayImages;
+    vector<Mat> targetImageMats;
+    vector< std::vector<cv::KeyPoint> > keyPointsVec;
+    vector<Mat> descriptorsVec;
+    
+    for(int i =0 ; i < numOfImages; i++){
+        Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:images[i]];
+        Mat grayImageMat;
+        cvtColor(targetImageMat, grayImageMat, CV_BGR2GRAY);
+        grayImages.push_back(grayImageMat);
+        targetImageMats.push_back(targetImageMat);
+    }
+    
+    NSLog(@"BRISK Algorithm start");
+    for(int i =0; i < numOfImages; i++){
+        
+        std::vector<cv::KeyPoint> keyPoints;
+        Mat descriptors;
+        extractFeatureUsingBRISK(grayImages[i], keyPoints, descriptors);
+        keyPointsVec.push_back(keyPoints);
+        descriptorsVec.push_back(descriptors);
+        NSLog(@"Extract Feature : %d, extracted : %d", i, keyPoints.size());
+    }
+    NSLog(@"BRISK END");
+    
+    NSLog(@"AKAZE Algorithm start");
+    for(int i =0; i < numOfImages; i++){
+        extractFeatureUsingAkaze(targetImageMats[i], keyPointsVec[i], descriptorsVec[i]);
+        NSLog(@"Extract Feature : %d, extracted : %d", i, keyPointsVec[i].size());
+    }
+    NSLog(@"AKAZE END");
+    
+    NSLog(@"ORB Algorithm start");
+    for(int i =0; i < numOfImages; i++){
+        extractFeatureUsingORB(grayImages[i], keyPointsVec[i], descriptorsVec[i]);
+        NSLog(@"Extract Feature : %d, extracted : %d", i, keyPointsVec[i].size());
+    }
+    NSLog(@"ORB END");
+
+    NSLog(@"FAST Algorithm start");
+    for(int i =0; i < numOfImages; i++){
+        extractFeatureUsingFAST(grayImages[i], keyPointsVec[i], descriptorsVec[i]);
+        NSLog(@"Extract Feature : %d, extracted : %d", i, keyPointsVec[i].size());
+    }
+    NSLog(@"FAST END");
+
+    
+}
 
 
 //-(UIImage*) stabilizeImage:(UIImage*)targetImage{

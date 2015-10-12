@@ -21,4 +21,5 @@
 -(NSArray*) matchedFeatureWithImageList:(NSArray*)images representingPixelSize:(NSInteger)pixel;
 -(UIImage*) stabilizeImage:(UIImage*)targetImage;
 -(NSArray*) stabilizedWithImageList:(NSArray *)images;
+-(void) compareExtractor:(NSArray*)images;
 @end
