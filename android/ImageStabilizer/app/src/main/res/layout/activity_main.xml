@@ -15,13 +15,40 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:src="@drawable/data_4_1" />
-        <Button
-            android:id="@+id/btnChangeImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Change Image set"
-            android:background="#20000000"
-            android:onClick="changeImageSetClicked"/>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btnChangeImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Image set"
+                android:background="#20000000"
+                android:onClick="changeImageSetClicked"/>
+            <Button
+                android:id="@+id/btnFeatureExtraction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feature Extraction"
+                android:background="#20000000"
+                android:onClick="featureExtractionClicked"/>
+            <Button
+                android:id="@+id/btnFeatureMatching"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feature Matching"
+                android:background="#20000000"
+                android:onClick="featureMatchingClicked"/>
+            <Button
+                android:id="@+id/btnStabilization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stabilization"
+                android:background="#20000000"
+                android:onClick="stabilizationClicked"/>
+        </LinearLayout>
+
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="wrap_content"

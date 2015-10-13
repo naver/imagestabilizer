@@ -76,6 +76,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeImageSetClicked(View view){
-        System.out.println("Change Image Set Clicked");
+        System.out.println("[Change Image Set Clicked]");
+    }
+    public void featureExtractionClicked(View view){
+        System.out.println("[Feature Extraction Clicked]");
+    }
+    public void featureMatchingClicked(View view){
+        System.out.println("[Feature Matching Clicked]");
+    }
+    public void stabilizationClicked(View view){
+        System.out.println("[Stabilization Clicked]");
     }
 }
