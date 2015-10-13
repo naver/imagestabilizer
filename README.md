@@ -5,7 +5,7 @@ Image stabilization using features detector in IOS
 Image stabilization is a essential technique when you take images using continuous shooting.
 There are many approaches to solve this problem but this project use the feature extraction.
 
-* At first, Extract features from image using Feature extractor like SIFT, SURF. In this project, I use BRISK and AKAZE, because it is fast and there is no patent issue.
+* At first, Extract features from image using Feature extractor like SIFT, SURF. In this project, I use FAST+ORB, because it is fast and there is no patent issue.
 * Find Matching features in two images. There are many matching technique but I just use Bruteforce Matcher because it is simple and result is not bad in this project.
 * Last, Get geometric transformation matrix which is minimize error of transformed points. RANSAC is used for this process.
 
