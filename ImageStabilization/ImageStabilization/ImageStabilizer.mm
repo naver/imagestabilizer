@@ -191,10 +191,8 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             bool inliner = false;
             
             for(int j = 1; j < matchedList.size(); j++){
-                std::vector< std::vector<DMatch> > nn_matcher = matchedList[j];
-                int nextTrainIdx = nn_matcher[trainIdx][0].trainIdx;
-                
-                if(isInliner(nn_matcher, trainIdx)){
+                int nextTrainIdx = matchedList[j][trainIdx][0].trainIdx;
+                if(isInliner(matchedList[j], trainIdx)){
                     queries.push_back(nextTrainIdx);
                     trainIdx = nextTrainIdx;
                     inliner = true;
@@ -389,10 +387,10 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             bool inliner = false;
             
             for(int j = 1; j < matchedList.size(); j++){
-                std::vector< std::vector<DMatch> > nn_matcher = matchedList[j];
-                int nextTrainIdx = nn_matcher[trainIdx][0].trainIdx;
+//                std::vector< std::vector<DMatch> > nn_matcher = matchedList[j];
+                int nextTrainIdx = matchedList[j][trainIdx][0].trainIdx;
                 
-                if(isInliner(nn_matcher, trainIdx)){
+                if(isInliner(matchedList[j], trainIdx)){
                     queries.push_back(nextTrainIdx);
                     trainIdx = nextTrainIdx;
                     inliner = true;
