@@ -86,6 +86,24 @@
                                     <action selector="stabilizeImageClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NOQ-ox-aqi"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" alpha="0.69999998807907104" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rT0-np-Njf">
+                                <rect key="frame" x="391" y="130" width="189" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Compare feature extractors">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="compareExtractorClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="78P-lT-T4r"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zpc-Fk-Tfl">
+                                <rect key="frame" x="24" y="135" width="103" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Next image set"/>
+                                <connections>
+                                    <action selector="nextImageSetClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qsg-1k-Ugj"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -95,12 +113,16 @@
                             <constraint firstItem="VTr-cX-lED" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="Cyh-Xq-d2j"/>
                             <constraint firstItem="75C-tj-o8c" firstAttribute="top" secondItem="d0f-o3-KAi" secondAttribute="bottom" constant="5" id="GCs-26-vks"/>
                             <constraint firstItem="V0V-k9-4qP" firstAttribute="leading" secondItem="VTr-cX-lED" secondAttribute="leading" id="Glo-Tn-8Uz"/>
+                            <constraint firstItem="rT0-np-Njf" firstAttribute="top" secondItem="V0V-k9-4qP" secondAttribute="bottom" id="HEE-BO-MVc"/>
                             <constraint firstItem="4Gq-qW-vmq" firstAttribute="leading" secondItem="oSR-rs-0Cz" secondAttribute="leading" constant="20" id="JXE-uu-ySk"/>
+                            <constraint firstItem="Zpc-Fk-Tfl" firstAttribute="leading" secondItem="75C-tj-o8c" secondAttribute="leading" id="NWs-vP-0nY"/>
+                            <constraint firstItem="Zpc-Fk-Tfl" firstAttribute="top" secondItem="75C-tj-o8c" secondAttribute="bottom" constant="13" id="P4e-RW-O5e"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="leading" secondItem="oSR-rs-0Cz" secondAttribute="leading" id="PvF-UA-42G"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="top" secondItem="gHJ-0A-xrY" secondAttribute="top" constant="-20" id="X6A-Yu-GYT"/>
                             <constraint firstItem="V0V-k9-4qP" firstAttribute="top" secondItem="yv0-bi-7zm" secondAttribute="bottom" id="cLf-GR-ee7"/>
                             <constraint firstItem="75C-tj-o8c" firstAttribute="leading" secondItem="d0f-o3-KAi" secondAttribute="leading" id="dG1-Tq-n4w"/>
                             <constraint firstItem="yv0-bi-7zm" firstAttribute="top" secondItem="VTr-cX-lED" secondAttribute="bottom" id="ef2-UU-TiQ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="rT0-np-Njf" secondAttribute="trailing" id="fhU-DS-cty"/>
                             <constraint firstAttribute="trailingMargin" secondItem="sPs-sH-RXZ" secondAttribute="trailing" constant="-16" id="i8r-hR-dlW"/>
                             <constraint firstItem="sPs-sH-RXZ" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.5:1" id="oxX-rz-aKT"/>
                             <constraint firstItem="yv0-bi-7zm" firstAttribute="leading" secondItem="VTr-cX-lED" secondAttribute="leading" id="pLU-wt-MAI"/>

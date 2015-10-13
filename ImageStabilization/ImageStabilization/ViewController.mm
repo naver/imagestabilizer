@@ -138,6 +138,17 @@ typedef NS_ENUM(NSInteger, DataSet){
     
     _showResults = YES;
 }
+- (IBAction)compareExtractorClicked:(id)sender {
+    NSLog(@"Compare Extractor started");
+    NSMutableArray* targetImages = [NSMutableArray array];
+    
+    for(int i = 0; i < [self.images count]; i++){
+        [targetImages addObject:[UIImage imageNamed:self.images[i]]];
+    }
+
+    [self.stabilizer compareExtractor:targetImages];
+    
+}
 
 -(void) timerTick{
     
@@ -169,7 +180,6 @@ typedef NS_ENUM(NSInteger, DataSet){
     }else if( _datasetIndex == DATASET_4){
         self.images = @[@"data_4_1.jpg",@"data_4_2.jpg",@"data_4_3.jpg",@"data_4_4.jpg",@"data_4_5.jpg"];
     }
-
 }
 
 - (IBAction)sliderValueChanged:(UISlider *)sender {
@@ -179,5 +189,16 @@ typedef NS_ENUM(NSInteger, DataSet){
     self.timer = [NSTimer scheduledTimerWithTimeInterval:_animatinonInterval target:self selector:@selector(timerTick) userInfo:nil repeats:YES];
 }
 
+- (IBAction)nextImageSetClicked:(id)sender {
+    int nextIndex = _datasetIndex +1;
+    
+    if(nextIndex > DATASET_4){
+        nextIndex = 0;
+    }
+    
+    _datasetIndex = (DataSet)nextIndex;
+    _showResults = false;
+    [self setDefaultImages];
+}
 
 @end
