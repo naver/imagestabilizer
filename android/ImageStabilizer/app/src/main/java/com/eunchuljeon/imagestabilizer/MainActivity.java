@@ -18,6 +18,7 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,17 +27,29 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+
 public class MainActivity extends AppCompatActivity {
+    public enum DataSet{
+        DATA_SET_1,
+        DATA_SET_2,
+        DATA_SET_3,
+        DATA_SET_4
+    }
 
     private TimerTask mTask;
     private Timer mTimer;
-    private int imageIndex = R.drawable.data_4_1;
-
+    private int imageIndex = 0;
+    private int[] originalImageIndexes;
+    private ArrayList<Bitmap> resultImages;
+    private DataSet currentDataSet = DataSet.DATA_SET_4;
+    private ImageStabilizer stabilizer = new ImageStabilizer();
+    private boolean hasResultImage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loadCurrentDataSet();
 
         mTask = new TimerTask() {
             @Override
@@ -45,10 +58,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         ImageView imageView = (ImageView) findViewById(R.id.imageView1);
-                        imageView.setImageResource(imageIndex++);
+                        imageView.setImageResource(originalImageIndexes[imageIndex]);
 
-                        if (imageIndex > R.drawable.data_4_4) {
-                            imageIndex = R.drawable.data_4_1;
+                        if(hasResultImage && imageIndex < resultImages.size()){
+                            ImageView resultImageView = (ImageView) findViewById(R.id.imageView2);
+                            resultImageView.setImageBitmap(resultImages.get(imageIndex));
+                        }
+
+                        imageIndex++;
+
+                        if (imageIndex > originalImageIndexes.length-1) {
+                            imageIndex = 0;
                         }
                     }
                 });
@@ -56,8 +76,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mTimer = new Timer();
-
-        mTimer.schedule(mTask, 200,200);
+        mTimer.schedule(mTask, 200, 200);
     }
 
     @Override
@@ -90,20 +109,53 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeImageSetClicked(View view){
         System.out.println("[Change Image Set Clicked]");
+
+        switch(currentDataSet){
+            case DATA_SET_1:
+                currentDataSet = DataSet.DATA_SET_2;
+                break;
+            case DATA_SET_2:
+                currentDataSet = DataSet.DATA_SET_3;
+                break;
+            case DATA_SET_3:
+                currentDataSet = DataSet.DATA_SET_4;
+                break;
+            case DATA_SET_4:
+                currentDataSet = DataSet.DATA_SET_1;
+                break;
+        }
+
+        loadCurrentDataSet();
     }
     public void featureExtractionClicked(View view){
         System.out.println("[Feature Extraction Clicked]");
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.data_1_1);
 
-        Mat tmp = new Mat(bmp.getWidth(), bmp.getHeight(), CvType.CV_8UC4);
-        Utils.bitmapToMat(bmp, tmp);
-        Imgproc.cvtColor(tmp, tmp, Imgproc.COLOR_BGRA2GRAY);
+        ArrayList<Bitmap> originalImages = new ArrayList<Bitmap>();
 
-        Bitmap bmp2 = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(tmp, bmp2);
+        for(int i = 0; i < originalImageIndexes.length; i++){
+            Bitmap image = BitmapFactory.decodeResource(getResources(), originalImageIndexes[i]);
 
-        ImageView imageView = (ImageView) findViewById(R.id.imageView2);
-        imageView.setImageBitmap(bmp2);
+            if(image.getWidth()>720){
+                int width = 720;
+                int height = (int)(image.getHeight()*(720.0/(double)image.getHeight()));
+
+                Bitmap resized = Bitmap.createScaledBitmap(image, width, height,true );
+                originalImages.add(resized);
+            }else if (image.getHeight()>720){
+                int width = (int)(image.getWidth()*(720.0/image.getWidth()));
+                int height = 720;
+
+                Bitmap resized = Bitmap.createScaledBitmap(image, width, height,true );
+                originalImages.add(resized);
+            }else{
+                originalImages.add(image);
+            }
+        }
+
+        hasResultImage = false;
+        resultImages = stabilizer.featureExtraction(originalImages);
+        hasResultImage = true;
     }
     public void featureMatchingClicked(View view){
         System.out.println("[Feature Matching Clicked]");
@@ -133,4 +185,26 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void loadCurrentDataSet(){
+        switch (currentDataSet){
+            case DATA_SET_1:
+                originalImageIndexes = new int[]{R.drawable.data_1_1, R.drawable.data_1_2,R.drawable.data_1_3,R.drawable.data_1_4,R.drawable.data_1_5,R.drawable.data_1_6};
+                break;
+            case DATA_SET_2:
+                originalImageIndexes = new int[]{R.drawable.data_2_1, R.drawable.data_2_2,R.drawable.data_2_3,R.drawable.data_2_4,R.drawable.data_2_5,R.drawable.data_2_6};
+                break;
+            case DATA_SET_3:
+                originalImageIndexes = new int[]{R.drawable.data_3_1, R.drawable.data_3_2,R.drawable.data_3_3,R.drawable.data_3_4,R.drawable.data_3_5};
+                break;
+            case DATA_SET_4:
+                originalImageIndexes = new int[]{R.drawable.data_4_1, R.drawable.data_4_2,R.drawable.data_4_3,R.drawable.data_4_4};
+                break;
+            default:
+                break;
+        }
+
+        imageIndex = 0;
+        hasResultImage = false;
+    }
 }

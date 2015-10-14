@@ -5,8 +5,8 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_weight="0.5">
 
         <ImageView
@@ -16,8 +16,8 @@
             android:layout_weight="0.5"
             android:src="@drawable/data_4_1" />
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
                 android:id="@+id/btnChangeImage"
@@ -51,14 +51,14 @@
 
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_weight="0.5">
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_weight="0.5"
             android:src="@drawable/data_4_1" />
     </RelativeLayout>
