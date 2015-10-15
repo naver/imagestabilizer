@@ -129,22 +129,43 @@ public class MainActivity extends AppCompatActivity {
     }
     public void featureExtractionClicked(View view){
         System.out.println("[Feature Extraction Clicked]");
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.data_1_1);
 
+        ArrayList<Bitmap> originalImages = getOriginialImages();
+
+        hasResultImage = false;
+        resultImages = stabilizer.featureExtraction(originalImages);
+        hasResultImage = true;
+    }
+    public void featureMatchingClicked(View view){
+        System.out.println("[Feature Matching Clicked]");
+
+        ArrayList<Bitmap> originalImages = getOriginialImages();
+
+        hasResultImage = false;
+        resultImages = stabilizer.matchedFeatureWithImageList(originalImages);
+        hasResultImage = true;
+
+    }
+    public void stabilizationClicked(View view){
+        System.out.println("[Stabilization Clicked]");
+    }
+
+    private ArrayList<Bitmap> getOriginialImages(){
         ArrayList<Bitmap> originalImages = new ArrayList<Bitmap>();
+        int MAX_IMAGE_SIZE = 720;
 
         for(int i = 0; i < originalImageIndexes.length; i++){
             Bitmap image = BitmapFactory.decodeResource(getResources(), originalImageIndexes[i]);
 
-            if(image.getWidth()>720){
-                int width = 720;
-                int height = (int)(image.getHeight()*(720.0/(double)image.getHeight()));
+            if(image.getWidth()>MAX_IMAGE_SIZE){
+                int width = MAX_IMAGE_SIZE;
+                int height = (int)(image.getHeight()*((double)MAX_IMAGE_SIZE/(double)image.getHeight()));
 
                 Bitmap resized = Bitmap.createScaledBitmap(image, width, height,true );
                 originalImages.add(resized);
-            }else if (image.getHeight()>720){
-                int width = (int)(image.getWidth()*(720.0/image.getWidth()));
-                int height = 720;
+            }else if (image.getHeight()>MAX_IMAGE_SIZE){
+                int width = (int)(image.getWidth()*((double)MAX_IMAGE_SIZE/image.getWidth()));
+                int height = MAX_IMAGE_SIZE;
 
                 Bitmap resized = Bitmap.createScaledBitmap(image, width, height,true );
                 originalImages.add(resized);
@@ -153,15 +174,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        hasResultImage = false;
-        resultImages = stabilizer.featureExtraction(originalImages);
-        hasResultImage = true;
-    }
-    public void featureMatchingClicked(View view){
-        System.out.println("[Feature Matching Clicked]");
-    }
-    public void stabilizationClicked(View view){
-        System.out.println("[Stabilization Clicked]");
+        return originalImages;
     }
 
     @Override
