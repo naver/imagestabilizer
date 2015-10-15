@@ -53,7 +53,7 @@ public class ImageStabilizer {
         return results;
     }
 
-    public ArrayList<Bitmap> matchedFeatureWithImageList(ArrayList<Bitmap> originals){
+    public ArrayList<Mat> matchedFeatureWithImageList(ArrayList<Bitmap> originals){
         ArrayList<Bitmap> results = new ArrayList<Bitmap>();
         int numOfImages = originals.size();
         ArrayList<MatOfKeyPoint> keyPointsArr = new ArrayList<MatOfKeyPoint>();
@@ -128,14 +128,14 @@ public class ImageStabilizer {
                 Mat tmp = resultMats.get(j);
                 setPixelColor(tmp, (int)point.x, (int)point.y, 5);
 
-                Bitmap bmp2 = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(tmp, bmp2);
-                results.add(bmp2);
+//                Bitmap bmp2 = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
+//                Utils.matToBitmap(tmp, bmp2);
+//                results.add(bmp2);
             }
         }
 
 
-        return results;
+        return resultMats;
     }
 
     private void extractFeatureUsingFAST(Mat imageMat, MatOfKeyPoint keypoints, Mat descriptor){

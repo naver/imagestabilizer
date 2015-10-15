@@ -38,9 +38,14 @@ public class MainActivity extends AppCompatActivity {
 
     private TimerTask mTask;
     private Timer mTimer;
+    private TimerTask jobTask;
+    private Timer jobTimer;
+
     private int imageIndex = 0;
     private int[] originalImageIndexes;
+    private ArrayList<Bitmap> originalImages;
     private ArrayList<Bitmap> resultImages;
+    private ArrayList<Mat> resultMats;
     private DataSet currentDataSet = DataSet.DATA_SET_4;
     private ImageStabilizer stabilizer = new ImageStabilizer();
     private boolean hasResultImage = false;
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadCurrentDataSet();
+        originalImages = getOriginialImages();
 
         mTask = new TimerTask() {
             @Override
@@ -58,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         ImageView imageView = (ImageView) findViewById(R.id.imageView1);
-                        imageView.setImageResource(originalImageIndexes[imageIndex]);
+                        imageView.setImageBitmap(originalImages.get(imageIndex));
 
                         if(hasResultImage && imageIndex < resultImages.size()){
                             ImageView resultImageView = (ImageView) findViewById(R.id.imageView2);
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mTimer.cancel();
+        jobTimer.cancel();
         super.onDestroy();
     }
 
@@ -126,12 +133,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         loadCurrentDataSet();
+        originalImages = getOriginialImages();
     }
     public void featureExtractionClicked(View view){
         System.out.println("[Feature Extraction Clicked]");
-
-        ArrayList<Bitmap> originalImages = getOriginialImages();
-
         hasResultImage = false;
         resultImages = stabilizer.featureExtraction(originalImages);
         hasResultImage = true;
@@ -139,11 +144,38 @@ public class MainActivity extends AppCompatActivity {
     public void featureMatchingClicked(View view){
         System.out.println("[Feature Matching Clicked]");
 
-        ArrayList<Bitmap> originalImages = getOriginialImages();
+        jobTask = new TimerTask() {
+            @Override
+            public void run() {
 
-        hasResultImage = false;
-        resultImages = stabilizer.matchedFeatureWithImageList(originalImages);
-        hasResultImage = true;
+                hasResultImage = false;
+                resultMats = stabilizer.matchedFeatureWithImageList(originalImages);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if(resultImages == null){
+                            resultImages = new ArrayList<Bitmap>();
+                        }else{
+                            resultImages.clear();
+                        }
+
+                        for(int i = 0; i < resultMats.size(); i++){
+                            Mat tmp = resultMats.get(i);
+                            Bitmap bmp2 = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
+                            Utils.matToBitmap(tmp, bmp2);
+                            resultImages.add(bmp2);
+                        }
+
+                        hasResultImage = true;
+                    }
+                });
+            }
+        };
+
+        jobTimer = new Timer();
+        jobTimer.schedule(jobTask, 0);
 
     }
     public void stabilizationClicked(View view){
