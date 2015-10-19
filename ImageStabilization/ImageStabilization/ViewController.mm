@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "FeatureExtractor.h"
 #import "ImageStabilizer.h"
+#import "ImageStabilizerWrapper.h"
 
 
 typedef NS_ENUM(NSInteger, DataSet){
@@ -16,6 +17,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_2 = 1,
     DATASET_3 = 2,
     DATASET_4 = 3,
+    DATASET_5 = 4,
 };
 
 #define DEFAULT_DATASET DATASET_4
@@ -23,7 +25,8 @@ typedef NS_ENUM(NSInteger, DataSet){
 #define TIMER_INIT_INTERVAL 0.2
 
 @interface ViewController ()
-@property(nonatomic, strong) ImageStabilizer* stabilizer;
+@property (nonatomic, strong) ImageStabilizerWrapper* stabilizerWrapper;
+@property (nonatomic, strong) ImageStabilizer* stabilizer;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer2;
 @property (weak, nonatomic) IBOutlet UISlider *timerSlider;
@@ -46,6 +49,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     _animationDirection = 1;
     
     self.stabilizer = [[ImageStabilizer alloc] init];
+    self.stabilizerWrapper = [[ImageStabilizerWrapper alloc] init];
     [self setDefaultImages];
     self.currentIndex = 0;
     self.showResults = NO;
@@ -130,7 +134,7 @@ typedef NS_ENUM(NSInteger, DataSet){
         [targetImages addObject:[UIImage imageNamed:self.images[i]]];
     }
     
-    NSArray* result = [self.stabilizer stabilizedWithImageList:targetImages];
+    NSArray* result = [self.stabilizerWrapper getStabilizedImages:targetImages];
     
     for(int i  = 0; i < [result count]; i++){
         [self.resultImages addObject:[result objectAtIndex:i]];
@@ -179,6 +183,8 @@ typedef NS_ENUM(NSInteger, DataSet){
         self.images = @[@"data_3_1.jpg",@"data_3_2.jpg",@"data_3_3.jpg",@"data_3_4.jpg",@"data_3_5.jpg"];
     }else if( _datasetIndex == DATASET_4){
         self.images = @[@"data_4_1.jpg",@"data_4_2.jpg",@"data_4_3.jpg",@"data_4_4.jpg",@"data_4_5.jpg"];
+    }else if( _datasetIndex == DATASET_5){
+        self.images = @[@"data_5_1.jpg",@"data_5_2.jpg",@"data_5_3.jpg",@"data_5_4.jpg",@"data_5_5.jpg"];
     }
 }
 
@@ -192,7 +198,7 @@ typedef NS_ENUM(NSInteger, DataSet){
 - (IBAction)nextImageSetClicked:(id)sender {
     int nextIndex = _datasetIndex +1;
     
-    if(nextIndex > DATASET_4){
+    if(nextIndex > DATASET_5){
         nextIndex = 0;
     }
     

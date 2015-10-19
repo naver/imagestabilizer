@@ -179,7 +179,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void stabilizationClicked(View view){
-        System.out.println("[Stabilization Clicked]");
+        jobTask = new TimerTask() {
+            @Override
+            public void run() {
+                hasResultImage = false;
+                resultMats = stabilizer.stabilizeWithImageList(originalImages);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if(resultImages == null){
+                            resultImages = new ArrayList<Bitmap>();
+                        }else{
+                            resultImages.clear();
+                        }
+
+                        for(int i = 0; i < resultMats.size(); i++){
+                            Mat tmp = resultMats.get(i);
+                            Bitmap bmp2 = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
+                            Utils.matToBitmap(tmp, bmp2);
+                            resultImages.add(bmp2);
+                        }
+
+                        hasResultImage = true;
+                    }
+                });
+            }
+        };
+
+        jobTimer = new Timer();
+        jobTimer.schedule(jobTask, 0);
     }
 
     private ArrayList<Bitmap> getOriginialImages(){
