@@ -26,18 +26,26 @@ using namespace cv;
     self = [super init];
     if(self){
         _hasPrevResult = NO;
+        _isEnabled = NO;
     }
     
     return self;
 }
 
 -(void) dealloc{
+    [self resetStabilizer];
+}
+
+-(void) resetStabilizer{
     if(_estimatedResults.size() > 0){
         for(int i=0; i < _estimatedResults.size(); i++){
             delete _estimatedResults[i];
         }
         _estimatedResults.clear();
     }
+
+    _hasPrevResult = NO;
+    _isEnabled = NO;
 }
 
 -(void) setStabilizeSourceImage:(UIImage*) sourceImage{
@@ -71,6 +79,7 @@ void extractFeatureUsingORB(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& des
 
 void extractFeatureUsingFAST(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
     Ptr<FastFeatureDetector> fast = FastFeatureDetector::create();
+    fast->setThreshold(20);
     fast->detect(imageMat, keyPoints);
     Ptr<ORB> orb = ORB::create();
     orb->compute(imageMat, keyPoints, descriptor);
@@ -378,6 +387,10 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             descriptorsVec.push_back(descriptors);
             
             NSLog(@"Extract Feature : %d, extracted : %d", i, keyPoints.size());
+            if(keyPoints.size() < 3){
+                _isEnabled = NO;
+                return images;
+            }
         }
         
         NSLog(@"Start of matching");
@@ -433,6 +446,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         
         if(queryIndexes.size() < 3){
             // 점이 충분하지않으므로 기존 이미지를 넘겨줌
+            _isEnabled = NO;
             return images;
         }
         
@@ -465,7 +479,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             }
             _estimatedResults.clear();
         }
-
+        
         
         NSLog(@"estimate homograpy start");
         for( int i = 1; i < numOfImages; i++){
@@ -514,7 +528,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             _estimatedResults.push_back(pMat);
             
             NSLog(@"index : %i %p", i, pMat);
-            print(*pMat);
+            //            print(*pMat);
             NSLog(@"");
             
             warpPerspective(targetImageMats[i], res, prevH, cv::Size(cols, rows));
@@ -522,7 +536,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             
             //        res = [OpenCVUtils mergeImage:targetImageMats[0] another:res];
             res = [OpenCVUtils mergeImage:resultMats[0] another:res mask:mask];
-
+            
             resultMats.push_back(res);
         }
         
@@ -534,8 +548,12 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             [results addObject:resultImage];
         }
         
+        _isEnabled = YES;
+        
         return results;
     }catch(cv::Exception & e){
+        _isEnabled = NO;
+        
         return images;
     }
 }
@@ -560,7 +578,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             [OpenCVUtils removeEdge:mask edge:1];
             
             NSLog(@"after index : %i %p", i, _estimatedResults[i-1]);
-            print(*_estimatedResults[i-1]);
+            //            print(*_estimatedResults[i-1]);
             NSLog(@"");
             
             warpPerspective(targetImageMat, res, *_estimatedResults[i-1], cv::Size(cols, rows));
@@ -572,9 +590,12 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             [results addObject:resultImage];
         }
         
+        _isEnabled = YES;
+        
         return results;
         
     }catch(cv::Exception &e){
+        _isEnabled = NO;
         return images;
     }
 }
@@ -628,7 +649,5 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         NSLog(@"Extract Feature : %d, extracted : %d", i, keyPointsVec[i].size());
     }
     NSLog(@"FAST END");
-    
-    
 }
 @end

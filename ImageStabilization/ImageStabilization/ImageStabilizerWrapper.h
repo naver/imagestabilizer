@@ -10,4 +10,6 @@
 
 @interface ImageStabilizerWrapper : NSObject
 -(NSArray*) getStabilizedImages:(NSArray*)originalImages;
+-(BOOL) isStabilizerEnabled;
+-(void) resetStabilizer;
 @end

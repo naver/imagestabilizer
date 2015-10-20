@@ -18,11 +18,19 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_3 = 2,
     DATASET_4 = 3,
     DATASET_5 = 4,
+    DATASET_6 = 5,
+    DATASET_7 = 6,
+    DATASET_8 = 7,
+    DATASET_9 = 8,
+    DATASET_10 = 9,
+    DATASET_11 = 10,
+    DATASET_12 = 11,
 };
 
 #define DEFAULT_DATASET DATASET_4
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 0.2
+#define END_OF_DATASET DATASET_12
 
 @interface ViewController ()
 @property (nonatomic, strong) ImageStabilizerWrapper* stabilizerWrapper;
@@ -185,6 +193,20 @@ typedef NS_ENUM(NSInteger, DataSet){
         self.images = @[@"data_4_1.jpg",@"data_4_2.jpg",@"data_4_3.jpg",@"data_4_4.jpg",@"data_4_5.jpg"];
     }else if( _datasetIndex == DATASET_5){
         self.images = @[@"data_5_1.jpg",@"data_5_2.jpg",@"data_5_3.jpg",@"data_5_4.jpg",@"data_5_5.jpg"];
+    }else if( _datasetIndex == DATASET_6){
+        self.images = @[@"data_6_1.jpg",@"data_6_2.jpg",@"data_6_3.jpg",@"data_6_4.jpg",@"data_6_5.jpg", @"data_6_6.jpg"];
+    }else if( _datasetIndex == DATASET_7){
+        self.images = @[@"data_7_1.jpg",@"data_7_2.jpg",@"data_7_3.jpg",@"data_7_4.jpg",@"data_7_5.jpg", @"data_7_6.jpg"];
+    }else if( _datasetIndex == DATASET_8){
+        self.images = @[@"data_8_1.jpg",@"data_8_2.jpg",@"data_8_3.jpg",@"data_8_4.jpg",@"data_8_5.jpg", @"data_8_6.jpg", @"data_8_7.jpg", @"data_8_8.jpg"];
+    }else if( _datasetIndex == DATASET_9){
+        self.images = @[@"data_9_1.jpg",@"data_9_2.jpg",@"data_9_3.jpg",@"data_9_4.jpg",@"data_9_5.jpg"];
+    }else if( _datasetIndex == DATASET_10){
+        self.images = @[@"data_10_1.jpg",@"data_10_2.jpg",@"data_10_3.jpg",@"data_10_4.jpg",@"data_10_5.jpg"];
+    }else if( _datasetIndex == DATASET_11){
+        self.images = @[@"data_11_1.jpg",@"data_11_2.jpg",@"data_11_3.jpg",@"data_11_4.jpg",@"data_11_5.jpg"];
+    }else if( _datasetIndex == DATASET_12){
+        self.images = @[@"data_12_1.jpg",@"data_12_2.jpg",@"data_12_3.jpg",@"data_12_4.jpg",@"data_12_5.jpg"];
     }
 }
 
@@ -198,13 +220,16 @@ typedef NS_ENUM(NSInteger, DataSet){
 - (IBAction)nextImageSetClicked:(id)sender {
     int nextIndex = _datasetIndex +1;
     
-    if(nextIndex > DATASET_5){
+    if(nextIndex > END_OF_DATASET){
         nextIndex = 0;
     }
     
     _datasetIndex = (DataSet)nextIndex;
     _showResults = false;
+    _currentIndex = 0;
+    _animationDirection = 1;
     [self setDefaultImages];
+    [_stabilizerWrapper resetStabilizer];
 }
 
 @end

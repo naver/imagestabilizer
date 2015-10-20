@@ -16,6 +16,7 @@
 
 @interface ImageStabilizer : NSObject
 @property(nonatomic) BOOL hasPrevResult;
+@property(nonatomic) BOOL isEnabled;
 -(void) setStabilizeSourceImage:(UIImage*) sourceImage;
 -(UIImage*) extractFeature:(UIImage*)targetImage representingPixelSize:(NSInteger)pixel;
 -(UIImage*) matchedFeature:(UIImage*)image1 anotherImage:(UIImage*)image2 representingPixelSize:(NSInteger)pixel;
@@ -24,4 +25,5 @@
 -(NSArray*) stabilizedWithImageList:(NSArray *)images;
 -(NSArray*) stabilizedWithPrevResult:(NSArray *)images;
 -(void) compareExtractor:(NSArray*)images;
+-(void) resetStabilizer;
 @end

@@ -175,7 +175,7 @@ using namespace cv;
 }
 
 + (void)setPixelColor:(cv::Mat)cvMat posX:(NSInteger)posX posY:(NSInteger)posY size:(NSInteger)size color:(UIColor *)color{
-//    cv::Vec4b c = cvMat.at<cv::Vec4b>(cv::Point(posY, posX));
+    //    cv::Vec4b c = cvMat.at<cv::Vec4b>(cv::Point(posY, posX));
     
     cv::Vec4b c = [OpenCVUtils convertUIColorToVect:color];
     
@@ -193,11 +193,11 @@ using namespace cv;
     NSURL *documentsURL = [NSURL URLWithString:documentsDirectory];
     
     NSURL *destinationURL = [documentsURL URLByAppendingPathComponent:fileName];
-
-
+    
+    
     
     // Now you can write to the file....
-
+    
     NSError *writeError = nil;
     [data writeToFile:[destinationURL absoluteString] atomically:YES encoding:NSUTF8StringEncoding error:&writeError];
     NSLog(@"File : %@", [destinationURL absoluteString]);

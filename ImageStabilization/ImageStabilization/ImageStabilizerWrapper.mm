@@ -33,4 +33,12 @@
         return [_stabilizer stabilizedWithImageList:originalImages];
     }
 }
+
+-(BOOL) isStabilizerEnabled{
+    return [_stabilizer isEnabled];
+}
+
+-(void) resetStabilizer{
+    [_stabilizer resetStabilizer];
+}
 @end
