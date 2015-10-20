@@ -19,6 +19,7 @@
 + (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName;
 + (void)setPixelColor:(cv::Mat)cvMat posX:(NSInteger)posX posY:(NSInteger)posY size:(NSInteger)size color:(UIColor *)color;
 + (cv::Vec4b) convertUIColorToVect:(UIColor*)color;
-
++ (NSArray*) findCropAreaWithHMatrics:(cv::Mat)hMat imageWidth:(int)width imageHeight:(int)height;
 +(void)writeFile:(NSString*)fileName data:(NSString*) data;
++ (cv::Mat) cropImage:(cv::Mat) image left:(int)left right:(int)right top:(int)top bottom:(int)bottom;
 @end

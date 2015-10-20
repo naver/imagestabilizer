@@ -482,9 +482,12 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         
         
         NSLog(@"estimate homograpy start");
+        NSMutableArray* cropAreas = [[NSMutableArray alloc] init];
+        
         for( int i = 1; i < numOfImages; i++){
             Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
             //        Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
+//            Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
             
             cv::Mat H = cv::Mat(3,3,R.type());
             H.at<double>(0,0) = R.at<double>(0,0);
@@ -533,18 +536,46 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             
             warpPerspective(targetImageMats[i], res, prevH, cv::Size(cols, rows));
             warpPerspective(mask, mask, prevH, cv::Size(cols,rows));
+
+            NSArray* arr = [OpenCVUtils findCropAreaWithHMatrics:prevH imageWidth:cols imageHeight:rows];
+            [cropAreas addObject:arr];
             
             //        res = [OpenCVUtils mergeImage:targetImageMats[0] another:res];
-            res = [OpenCVUtils mergeImage:resultMats[0] another:res mask:mask];
+//            res = [OpenCVUtils mergeImage:resultMats[0] another:res mask:mask];
             
             resultMats.push_back(res);
         }
         
         NSLog(@"end ot estimate");
         
+        NSLog(@"Find crop area");
+        int left = 0; int top = 0; int right = targetImageMats[0].cols; int bottom = targetImageMats[0].rows;
+        
+        for (NSArray* arr in cropAreas) {
+            int targetLeft = [arr[0] integerValue];
+            int targetRight = [arr[1] integerValue];
+            int targetTop = [arr[2] integerValue];
+            int targetBottom = [arr[3] integerValue];
+            
+            if(left < targetLeft){
+                left = targetLeft;
+            }
+            if(right > targetRight){
+                right = targetRight;
+            }
+            if(top<targetTop){
+                top = targetTop;
+            }
+            if(bottom<targetBottom){
+                bottom = targetBottom;
+            }
+        }
+        
         NSMutableArray* results = [NSMutableArray array];
         for( int i = 0; i < numOfImages; i++){
-            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:resultMats[i]];
+            Mat mat = resultMats[i];
+//            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:mat];
+            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:[OpenCVUtils cropImage:mat left:left right:right top:top bottom:bottom]];
             [results addObject:resultImage];
         }
         
@@ -585,7 +616,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             warpPerspective(mask, mask, *_estimatedResults[i-1], cv::Size(cols, rows));
             
             //        res = [OpenCVUtils mergeImage:targetImageMats[0] another:res];
-            res = [OpenCVUtils mergeImage:firstImageMat another:res mask:mask];
+//            res = [OpenCVUtils mergeImage:firstImageMat another:res mask:mask];
             UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:res];
             [results addObject:resultImage];
         }
