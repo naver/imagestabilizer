@@ -506,9 +506,9 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             int cols = targetImageMats[i].cols;
             
             cv::Mat res(rows, cols, CV_8UC4);
-            cv::Mat mask(rows, cols, CV_8UC4);
-            mask.setTo(1);
-            [OpenCVUtils removeEdge:mask edge:1];
+//            cv::Mat mask(rows, cols, CV_8UC4);
+//            mask.setTo(1);
+//            [OpenCVUtils removeEdge:mask edge:1];
             
             if(i==1){
                 prevH = H;
@@ -535,7 +535,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             NSLog(@"");
             
             warpPerspective(targetImageMats[i], res, prevH, cv::Size(cols, rows));
-            warpPerspective(mask, mask, prevH, cv::Size(cols,rows));
+//            warpPerspective(mask, mask, prevH, cv::Size(cols,rows));
 
             NSArray* arr = [OpenCVUtils findCropAreaWithHMatrics:prevH imageWidth:cols imageHeight:rows];
             [cropAreas addObject:arr];
@@ -594,9 +594,12 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         int numOfImages = [images count];
         
         NSMutableArray* results = [NSMutableArray array];
-        [results addObject:images[0]];
         
         Mat firstImageMat = [OpenCVUtils cvMatFromUIImage:images[0]];
+        NSMutableArray* cropAreas = [[NSMutableArray alloc] init];
+        
+        vector<Mat> resultMats;
+        resultMats.push_back(firstImageMat);
         
         for( int i = 1; i < numOfImages; i++){
             Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:images[i]];
@@ -604,20 +607,55 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             int cols = targetImageMat.cols;
             
             cv::Mat res(rows, cols, CV_8UC4);
-            cv::Mat mask(rows, cols, CV_8UC4);
-            mask.setTo(1);
-            [OpenCVUtils removeEdge:mask edge:1];
+//            cv::Mat mask(rows, cols, CV_8UC4);
+//            mask.setTo(1);
+//            [OpenCVUtils removeEdge:mask edge:1];
             
             NSLog(@"after index : %i %p", i, _estimatedResults[i-1]);
             //            print(*_estimatedResults[i-1]);
             NSLog(@"");
             
             warpPerspective(targetImageMat, res, *_estimatedResults[i-1], cv::Size(cols, rows));
-            warpPerspective(mask, mask, *_estimatedResults[i-1], cv::Size(cols, rows));
+//            warpPerspective(mask, mask, *_estimatedResults[i-1], cv::Size(cols, rows));
+            
+            NSArray* arr = [OpenCVUtils findCropAreaWithHMatrics:*_estimatedResults[i-1] imageWidth:cols imageHeight:rows];
+            [cropAreas addObject:arr];
+            
+            resultMats.push_back(res);
             
             //        res = [OpenCVUtils mergeImage:targetImageMats[0] another:res];
 //            res = [OpenCVUtils mergeImage:firstImageMat another:res mask:mask];
-            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:res];
+//            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:res];
+//            [results addObject:resultImage];
+        }
+        
+        NSLog(@"Find crop area");
+        int left = 0; int top = 0; int right = firstImageMat.cols; int bottom = firstImageMat.rows;
+        
+        for (NSArray* arr in cropAreas) {
+            int targetLeft = [arr[0] integerValue];
+            int targetRight = [arr[1] integerValue];
+            int targetTop = [arr[2] integerValue];
+            int targetBottom = [arr[3] integerValue];
+            
+            if(left < targetLeft){
+                left = targetLeft;
+            }
+            if(right > targetRight){
+                right = targetRight;
+            }
+            if(top<targetTop){
+                top = targetTop;
+            }
+            if(bottom<targetBottom){
+                bottom = targetBottom;
+            }
+        }
+        
+        for( int i = 0; i < numOfImages; i++){
+            Mat mat = resultMats[i];
+            //            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:mat];
+            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:[OpenCVUtils cropImage:mat left:left right:right top:top bottom:bottom]];
             [results addObject:resultImage];
         }
         
