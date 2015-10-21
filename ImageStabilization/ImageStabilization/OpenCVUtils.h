@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 @interface OpenCVUtils : NSObject
-+ (cv::Mat)cvMatFromUIImage:(UIImage *)image;
++ (cv::Mat)cvMatFromUIImage:(UIImage *)imaage;
 + (cv::Mat)cvMatGrayFromUIImage:(UIImage *)image;
 + (UIImage *)UIImageFromCVMat:(cv::Mat)cvMat;
 + (cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2;

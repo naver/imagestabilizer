@@ -566,7 +566,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             if(top<targetTop){
                 top = targetTop;
             }
-            if(bottom<targetBottom){
+            if(bottom>targetBottom){
                 bottom = targetBottom;
             }
         }
@@ -647,7 +647,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             if(top<targetTop){
                 top = targetTop;
             }
-            if(bottom<targetBottom){
+            if(bottom>targetBottom){
                 bottom = targetBottom;
             }
         }

@@ -25,12 +25,14 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_10 = 9,
     DATASET_11 = 10,
     DATASET_12 = 11,
+    DATASET_13 = 12,
+    DATASET_14 = 13
 };
 
-#define DEFAULT_DATASET DATASET_4
+#define DEFAULT_DATASET DATASET_14
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 0.2
-#define END_OF_DATASET DATASET_12
+#define END_OF_DATASET DATASET_14
 
 @interface ViewController ()
 @property (nonatomic, strong) ImageStabilizerWrapper* stabilizerWrapper;
@@ -146,6 +148,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     
     for(int i  = 0; i < [result count]; i++){
         [self.resultImages addObject:[result objectAtIndex:i]];
+        NSLog(@"Image Size : %lf %lf", [self.resultImages[0] size].width, [self.resultImages[0] size].height);
     }
     
     _showResults = YES;
@@ -207,6 +210,10 @@ typedef NS_ENUM(NSInteger, DataSet){
         self.images = @[@"data_11_1.jpg",@"data_11_2.jpg",@"data_11_3.jpg",@"data_11_4.jpg",@"data_11_5.jpg"];
     }else if( _datasetIndex == DATASET_12){
         self.images = @[@"data_12_1.jpg",@"data_12_2.jpg",@"data_12_3.jpg",@"data_12_4.jpg",@"data_12_5.jpg"];
+    }else if( _datasetIndex == DATASET_13){
+        self.images = @[@"data_13_1.jpg",@"data_13_2.jpg",@"data_13_3.jpg",@"data_13_4.jpg",@"data_13_5.jpg"];
+    }else if( _datasetIndex == DATASET_14){
+        self.images = @[@"data_14_1.jpg",@"data_14_2.jpg",@"data_14_3.jpg",@"data_14_4.jpg",@"data_14_5.jpg"];
     }
 }
 
