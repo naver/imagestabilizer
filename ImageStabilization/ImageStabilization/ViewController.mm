@@ -26,13 +26,16 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_11 = 10,
     DATASET_12 = 11,
     DATASET_13 = 12,
-    DATASET_14 = 13
+    DATASET_14 = 13,
+    DATASET_15 = 14,
+    DATASET_16 = 15,
+    DATASET_17 = 16
 };
 
-#define DEFAULT_DATASET DATASET_14
+#define DEFAULT_DATASET DATASET_16
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 0.2
-#define END_OF_DATASET DATASET_14
+#define END_OF_DATASET DATASET_17
 
 @interface ViewController ()
 @property (nonatomic, strong) ImageStabilizerWrapper* stabilizerWrapper;
@@ -214,6 +217,12 @@ typedef NS_ENUM(NSInteger, DataSet){
         self.images = @[@"data_13_1.jpg",@"data_13_2.jpg",@"data_13_3.jpg",@"data_13_4.jpg",@"data_13_5.jpg"];
     }else if( _datasetIndex == DATASET_14){
         self.images = @[@"data_14_1.jpg",@"data_14_2.jpg",@"data_14_3.jpg",@"data_14_4.jpg",@"data_14_5.jpg"];
+    }else if( _datasetIndex == DATASET_15){
+        self.images = @[@"data_15_1.jpg",@"data_15_2.jpg",@"data_15_3.jpg",@"data_15_4.jpg",@"data_15_5.jpg"];
+    }else if( _datasetIndex == DATASET_16){
+        self.images = @[@"data_16_1.jpg",@"data_16_2.jpg",@"data_16_3.jpg",@"data_16_4.jpg",@"data_16_5.jpg"];
+    }else if( _datasetIndex == DATASET_17){
+        self.images = @[@"data_17_1.jpg",@"data_17_2.jpg",@"data_17_3.jpg",@"data_17_4.jpg",@"data_17_5.jpg",@"data_17_6.jpg"];
     }
 }
 

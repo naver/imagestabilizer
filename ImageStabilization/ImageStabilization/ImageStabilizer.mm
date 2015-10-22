@@ -444,7 +444,7 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         
         NSLog(@"Find Inliner Matched Num : %d", queryIndexes.size());
         
-        if(queryIndexes.size() < 3){
+        if(queryIndexes.size() <= 3){
             // 점이 충분하지않으므로 기존 이미지를 넘겨줌
             _isEnabled = NO;
             return images;
@@ -488,6 +488,12 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
             //        Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
 //            Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
+            
+            if(R.cols ==0 && R.rows ==0){
+                // Estimate 가 잘 안된경우
+                _isEnabled = NO;
+                return images;
+            }
             
             cv::Mat H = cv::Mat(3,3,R.type());
             H.at<double>(0,0) = R.at<double>(0,0);
@@ -570,12 +576,28 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
                 bottom = targetBottom;
             }
         }
+
+        float imageWidth = targetImageMats[0].cols;
+        float imageHeight = targetImageMats[0].rows;
+        float maxDiff = 0.0;
+        maxDiff = maxDiff < (float)left/imageWidth ? (float)left/imageWidth : maxDiff;
+        maxDiff = maxDiff < abs(imageWidth - right)/imageWidth ? abs(imageWidth - right)/imageWidth : maxDiff;
+        maxDiff = maxDiff < (float)top/imageHeight ? (float)top/imageHeight : maxDiff;
+        maxDiff = maxDiff < abs(imageHeight - bottom)/imageHeight ? abs(imageHeight - bottom)/imageHeight : maxDiff;
+        
+        NSLog(@"Max Diff : %lf", maxDiff);
+        
+        if(maxDiff > 0.1){
+            _isEnabled = NO;
+            return images;
+        }
         
         NSMutableArray* results = [NSMutableArray array];
         for( int i = 0; i < numOfImages; i++){
             Mat mat = resultMats[i];
 //            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:mat];
             UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:[OpenCVUtils cropImage:mat left:left right:right top:top bottom:bottom]];
+            
             [results addObject:resultImage];
         }
         
@@ -650,6 +672,21 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
             if(bottom>targetBottom){
                 bottom = targetBottom;
             }
+        }
+        
+        float imageWidth = firstImageMat.cols;
+        float imageHeight = firstImageMat.rows;
+        float maxDiff = 0.0;
+        maxDiff = maxDiff < (float)left/imageWidth ? (float)left/imageWidth : maxDiff;
+        maxDiff = maxDiff < abs(imageWidth - right)/imageWidth ? abs(imageWidth - right)/imageWidth : maxDiff;
+        maxDiff = maxDiff < (float)top/imageHeight ? (float)top/imageHeight : maxDiff;
+        maxDiff = maxDiff < abs(imageHeight - bottom)/imageHeight ? abs(imageHeight - bottom)/imageHeight : maxDiff;
+        
+        NSLog(@"Max Diff : %lf", maxDiff);
+        
+        if(maxDiff > 0.1){
+            _isEnabled = NO;
+            return images;
         }
         
         for( int i = 0; i < numOfImages; i++){
