@@ -15,6 +15,7 @@
 + (UIImage *)UIImageFromCVMat:(cv::Mat)cvMat;
 + (cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2;
 + (cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2 mask:(cv::Mat)mask;
++ (cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2 rect:(CGRect)r;
 + (cv::Mat) removeEdge:(cv::Mat)image edge:(NSInteger)edgeSize;
 + (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName;
 + (void)setPixelColor:(cv::Mat)cvMat posX:(NSInteger)posX posY:(NSInteger)posY size:(NSInteger)size color:(UIColor *)color;

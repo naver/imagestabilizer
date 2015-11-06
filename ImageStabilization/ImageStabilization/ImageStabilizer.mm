@@ -593,10 +593,22 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         }
         
         NSMutableArray* results = [NSMutableArray array];
+        Mat om;
         for( int i = 0; i < numOfImages; i++){
             Mat mat = resultMats[i];
 //            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:mat];
+            
             UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:[OpenCVUtils cropImage:mat left:left right:right top:top bottom:bottom]];
+            
+//            Mat m2 = [OpenCVUtils cropImage:mat left:left right:right top:top bottom:bottom];
+//
+//            if( i > 0){
+//                m2 = [OpenCVUtils mergeImage:om another:m2 rect:CGRectMake(150, 190, 420, 130)];
+//            }else{
+//                om = m2;
+//            }
+//
+//            UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:m2];
             
             [results addObject:resultImage];
         }

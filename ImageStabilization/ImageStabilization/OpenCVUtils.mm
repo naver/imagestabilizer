@@ -119,6 +119,24 @@ using namespace cv;
     return result;
 }
 
++(cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2 rect:(CGRect)r{
+    cv::Mat result(image1.rows, image1.cols, CV_8UC4);
+    image1.copyTo(result);
+    
+    for(int row = r.origin.y; row < (r.origin.y+r.size.height); row++){
+        for( int col = r.origin.x; col < (r.origin.x+r.size.width); col++){
+            cv::Vec4b c = image2.at<cv::Vec4b>(col,row);
+//            c[0] = 255;
+//            c[1] = 0;
+//            c[2] = 0;
+//            c[3] = 255;
+            result.at<cv::Vec4b>(col,row) = c;
+        }
+    }
+
+    return result;
+}
+
 +(cv::Mat) removeEdge:(cv::Mat)image edge:(NSInteger)edgeSize{
     int rows = image.rows;
     int cols = image.cols;
