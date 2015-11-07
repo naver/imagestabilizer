@@ -8,8 +8,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    static {
+        System.loadLibrary("ImageStabilizer");
+    }
+
+    public native String hello();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        textView.setText(hello());
+
     }
 
     @Override
