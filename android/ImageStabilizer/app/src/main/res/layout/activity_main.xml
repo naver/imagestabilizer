@@ -1,25 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <android.support.design.widget.AppBarLayout android:layout_height="wrap_content"
-        android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5">
 
-        <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:src="@drawable/data_4_1" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btnChangeImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Change Image set"
+                android:background="#20000000"
+                android:onClick="changeImageSetClicked"/>
+            <Button
+                android:id="@+id/btnFeatureExtraction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feature Extraction"
+                android:background="#20000000"
+                android:onClick="featureExtractionClicked"/>
+            <Button
+                android:id="@+id/btnFeatureMatching"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Feature Matching"
+                android:background="#20000000"
+                android:onClick="featureMatchingClicked"/>
+            <Button
+                android:id="@+id/btnStabilization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stabilization"
+                android:background="#20000000"
+                android:onClick="stabilizationClicked"/>
+        </LinearLayout>
 
-    </android.support.design.widget.AppBarLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5">
 
-    <include layout="@layout/content_main" />
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+            android:src="@drawable/data_4_1" />
+    </RelativeLayout>
 
-    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
 
-</android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>

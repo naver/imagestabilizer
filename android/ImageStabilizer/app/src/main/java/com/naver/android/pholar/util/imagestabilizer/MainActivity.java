@@ -9,11 +9,18 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import org.opencv.android.OpenCVLoader;
 
 public class MainActivity extends AppCompatActivity {
 
     static {
-        System.loadLibrary("ImageStabilizer");
+        if (!OpenCVLoader.initDebug()) {
+            // Handle initialization error
+        } else {
+            System.loadLibrary("ImageStabilizer");
+        }
+
+
     }
 
     public native String hello();
@@ -22,21 +29,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(hello());
-
     }
 
     @Override
