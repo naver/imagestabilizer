@@ -9,18 +9,19 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import org.opencv.android.OpenCVLoader;
+
 
 public class MainActivity extends AppCompatActivity {
 
     static {
         if (!OpenCVLoader.initDebug()) {
+
             // Handle initialization error
         } else {
             System.loadLibrary("ImageStabilizer");
         }
-
-
     }
 
     public native String hello();
