@@ -33,6 +33,42 @@ void setPixelColor(Mat& cvMat, int posX, int posY, int size){
     }
 }
 
+void findCropAreaWithHMatrics:(Mat &hMat, int width, int height, vector<int>& resultVec){
+    Mat topLeftPoint = (Mat_<double>(3,1) << 0, 0, 1);
+    Mat topRightPoint = (Mat_<double>(3,1) << width, 0, 1);
+    Mat bottomLeftPoint = (Mat_<double>(3,1) << 0, height,1);
+    Mat bottomRightPoint = (Mat_<double>(3,1) << width, height,1);
+
+    topLeftPoint = hMat*topLeftPoint;
+    topRightPoint = hMat*topRightPoint;
+    bottomLeftPoint = hMat*bottomLeftPoint;
+    bottomRightPoint = hMat*bottomRightPoint;
+
+    int left = topLeftPoint.at<double>(0,0) > bottomLeftPoint.at<double>(0,0) ? ceil(topLeftPoint.at<double>(0,0)) : ceil(bottomLeftPoint.at<double>(0,0));
+    int right = topRightPoint.at<double>(0,0) < bottomRightPoint.at<double>(0,0) ? floor(topRightPoint.at<double>(0,0)) : floor(bottomRightPoint.at<double>(0,0));
+    int top = topLeftPoint.at<double>(1,0) > topRightPoint.at<double>(1,0) ? ceil(topLeftPoint.at<double>(1,0)) : ceil(topRightPoint.at<double>(1,0));
+    int bottom = bottomLeftPoint.at<double>(1,0) < bottomRightPoint.at<double>(1,0) ? floor(bottomLeftPoint.at<double>(1,0)) : floor(bottomRightPoint.at<double>(1,0));
+
+    if(left < 0){
+        left = 0;
+    }
+
+    if(right > width){
+        right = width;
+    }
+    if(top < 0){
+        top = 0;
+    }
+    if(bottom > height){
+        bottom = height;
+    }
+
+    resultVec.push_back(left);
+    resultVec.push_back(right);
+    resultVec.push_back(top);
+    resultVec.push_back(bottom);
+}
+
 void extractFeatureUsingFAST(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
     Ptr<FastFeatureDetector> fast = FastFeatureDetector::create();
     fast->setThreshold(20);
@@ -313,6 +349,7 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
         firstTargetImageMat.copyTo(firstResultImageMat);
 
         Mat prevH;
+        vector< vector<int> > cropAreas;
 
         for( int i = 1; i < numOfImages; i++){
             Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
@@ -362,7 +399,10 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
             pMat->at<double>(2,2) = 1.0;
 
             warpPerspective(targetImageMat, res, prevH, cv::Size(cols, rows));
+            vector<int> cropArea;
+            findCropAreaWithHMatrics(prevH, cols, rows, cropArea);
 
+            cropAreas.push_back(cropArea);
         }
 
         ALOG("end ot estimate");
