@@ -28,6 +28,8 @@ public class ImageStabilizer {
 
     public native int getGrayImages(long[] orignalMats, long[] resultMats, int numOfImages);
     public native int getFeatrueExtractedImages(long[] orignalMats, long[] resultMats, int numOfImages);
+    public native int getMatchedFeatureImages(long[] orignalMats, long[] resultMats, int numOfImages);
+    public native int getStabilizedImages(long[] originalMats, long[] resultMats, int numOfImages);
 
     public ArrayList<Bitmap> featureExtraction(ArrayList<Bitmap> originals){
         ArrayList<Bitmap> results = new ArrayList<Bitmap>();
@@ -46,12 +48,12 @@ public class ImageStabilizer {
             originalMats.add(originalMat);
             originalMatAddrs[i] = originalMat.getNativeObjAddr();
 
-            Mat resultMat = new Mat(bmp.getHeight(), bmp.getWidth(), CvType.CV_8UC1);
+            Mat resultMat = new Mat(bmp.getHeight(), bmp.getWidth(), CvType.CV_8UC4);
             resultMats.add(resultMat);
             resultMatAddrs[i] = resultMat.getNativeObjAddr();
         }
 
-        getGrayImages(originalMatAddrs, resultMatAddrs, numOfImages);
+        getFeatrueExtractedImages(originalMatAddrs, resultMatAddrs, numOfImages);
 
         for( int i =0 ; i < numOfImages; i++){
             Mat resultMat = resultMats.get(i);
@@ -59,42 +61,73 @@ public class ImageStabilizer {
             Utils.matToBitmap(resultMat, bmp2);
             results.add(bmp2);
         }
-//            Imgproc.cvtColor(tmp, tmp, Imgproc.COLOR_BGRA2GRAY);
-//
-//            MatOfKeyPoint keypoints = new MatOfKeyPoint();
-//            Mat descriptor = new Mat();
-//            extractFeatureUsingFAST(tmp, keypoints, descriptor);
-//
-//            KeyPoint[] arrKeyPoints = keypoints.toArray();
-//
-//            for(int j = 0; j < arrKeyPoints.length; j++){
-//                setPixelColor(tmp, (int)arrKeyPoints[j].pt.x, (int)arrKeyPoints[j].pt.y,5);
-//            }
-//
-//            Bitmap bmp2 = Bitmap.createBitmap(tmp.cols(), tmp.rows(), Bitmap.Config.ARGB_8888);
-//            Utils.matToBitmap(tmp, bmp2);
-//            results.add(bmp2);
-//        }
-
         return results;
     }
 
-    private void extractFeatureUsingFAST(Mat imageMat, MatOfKeyPoint keypoints, Mat descriptor){
-        FeatureDetector fastDetector = FeatureDetector.create(FeatureDetector.FAST);
-        fastDetector.detect(imageMat, keypoints);
-        DescriptorExtractor descriptorExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
-        descriptorExtractor.compute(imageMat, keypoints, descriptor);
+    public ArrayList<Bitmap> featureMatching(ArrayList<Bitmap> originals){
+        ArrayList<Bitmap> results = new ArrayList<Bitmap>();
+        ArrayList<Mat> originalMats = new ArrayList<Mat>();
+        ArrayList<Mat> resultMats = new ArrayList<Mat>();
+
+        int numOfImages = originals.size();
+
+        long originalMatAddrs[] = new long[numOfImages];
+        long resultMatAddrs[] = new long[numOfImages];
+
+        for( int i =0; i < numOfImages; i++) {
+            Bitmap bmp = originals.get(i);
+            Mat originalMat = new Mat(bmp.getHeight(), bmp.getWidth(), CvType.CV_8UC4);
+            Utils.bitmapToMat(bmp, originalMat);
+            originalMats.add(originalMat);
+            originalMatAddrs[i] = originalMat.getNativeObjAddr();
+
+            Mat resultMat = new Mat(bmp.getHeight(), bmp.getWidth(), CvType.CV_8UC4);
+            resultMats.add(resultMat);
+            resultMatAddrs[i] = resultMat.getNativeObjAddr();
+        }
+
+        //getFeatrueExtractedImages(originalMatAddrs, resultMatAddrs, numOfImages);
+        getMatchedFeatureImages(originalMatAddrs, resultMatAddrs, numOfImages);
+
+        for( int i =0 ; i < numOfImages; i++){
+            Mat resultMat = resultMats.get(i);
+            Bitmap bmp2 = Bitmap.createBitmap(resultMat.cols(), resultMat.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(resultMat, bmp2);
+            results.add(bmp2);
+        }
+        return results;
     }
 
-    private void setPixelColor(Mat mat, int posX, int posY, int size){
-        double[] color = {255.0,0.0,0.0,255.0};
+    public ArrayList<Bitmap> stabilizedImages(ArrayList<Bitmap> originals){
+        ArrayList<Bitmap> results = new ArrayList<Bitmap>();
+        ArrayList<Mat> originalMats = new ArrayList<Mat>();
+        ArrayList<Mat> resultMats = new ArrayList<Mat>();
 
-        for(int dx = posX-size/2; dx < posX+size/2; dx++){
-            for(int dy = posY-size/2; dy < posY+size/2; dy++){
-                if( dx >0 && dy > 0 && dx < mat.cols() && dy < mat.rows()){
-                    mat.put(dy, dx,color);
-                }
-            }
+        int numOfImages = originals.size();
+
+        long originalMatAddrs[] = new long[numOfImages];
+        long resultMatAddrs[] = new long[numOfImages];
+
+        for( int i =0; i < numOfImages; i++) {
+            Bitmap bmp = originals.get(i);
+            Mat originalMat = new Mat(bmp.getHeight(), bmp.getWidth(), CvType.CV_8UC4);
+            Utils.bitmapToMat(bmp, originalMat);
+            originalMats.add(originalMat);
+            originalMatAddrs[i] = originalMat.getNativeObjAddr();
+
+            Mat resultMat = new Mat(bmp.getHeight(), bmp.getWidth(), CvType.CV_8UC4);
+            resultMats.add(resultMat);
+            resultMatAddrs[i] = resultMat.getNativeObjAddr();
         }
+
+        getStabilizedImages(originalMatAddrs, resultMatAddrs, numOfImages);
+
+        for( int i =0 ; i < numOfImages; i++){
+            Mat resultMat = resultMats.get(i);
+            Bitmap bmp2 = Bitmap.createBitmap(resultMat.cols(), resultMat.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(resultMat, bmp2);
+            results.add(bmp2);
+        }
+        return results;
     }
 }

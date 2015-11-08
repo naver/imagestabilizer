@@ -15,6 +15,30 @@ extern "C" {
 JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_getGrayImages
   (JNIEnv *, jobject, jlongArray, jlongArray, jint);
 
+/*
+ * Class:     com_naver_android_pholar_util_imagestabilizer_ImageStabilizer
+ * Method:    getFeatrueExtractedImages
+ * Signature: ([J[JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_getFeatrueExtractedImages
+  (JNIEnv *, jobject, jlongArray, jlongArray, jint);
+
+/*
+ * Class:     com_naver_android_pholar_util_imagestabilizer_ImageStabilizer
+ * Method:    getMatchedFeatureImages
+ * Signature: ([J[JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_getMatchedFeatureImages
+  (JNIEnv *, jobject, jlongArray, jlongArray, jint);
+
+/*
+ * Class:     com_naver_android_pholar_util_imagestabilizer_ImageStabilizer
+ * Method:    getStabilizedImages
+ * Signature: ([J[JI)I
+ */
+JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_getStabilizedImages
+  (JNIEnv *, jobject, jlongArray, jlongArray, jint);
+
 #ifdef __cplusplus
 }
 #endif

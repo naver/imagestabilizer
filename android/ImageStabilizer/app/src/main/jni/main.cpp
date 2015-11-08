@@ -8,26 +8,50 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/features2d/features2d.hpp>
+#include <android/log.h>
+#include <opencv2/video/tracking.hpp>
 
 using namespace std;
 using namespace cv;
+
+#define  LOG_TAG    "JNI_LOG"
+#define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 
 JNIEXPORT jstring JNICALL Java_com_naver_android_pholar_util_imagestabilizer_MainActivity_hello
         (JNIEnv *env, jobject obj){
     return env->NewStringUTF("Hello from JNI");
 }
 
+void setPixelColor(Mat& cvMat, int posX, int posY, int size){
+    Vec4b c = {0,0,0,0};
 
-//int toGray(Mat img, Mat& gray)
-//{
-//    cvtColor(img, gray, CV_RGBA2GRAY); // Assuming RGBA input
-//
-//    if (gray.rows == img.rows && gray.cols == img.cols)
-//    {
-//        return (1);
-//    }
-//    return(0);
-//}
+    for( int dx = (posX-size/2); dx < (posX+size/2); dx++){
+        for( int dy = (posY - size/2); dy < (posY+size/2); dy++){
+            cvMat.at<cv::Vec4b>(dy, dx) = c;
+        }
+    }
+}
+
+void extractFeatureUsingFAST(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
+    Ptr<FastFeatureDetector> fast = FastFeatureDetector::create();
+    fast->setThreshold(20);
+    fast->detect(imageMat, keyPoints);
+    Ptr<ORB> orb = ORB::create();
+    orb->compute(imageMat, keyPoints, descriptor);
+}
+
+bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
+    const float nn_match_ratio = 0.6f;
+    float dist1 = nn_matches[queryIdx][0].distance;
+    float dist2 = nn_matches[queryIdx][1].distance;
+    if(dist1 < nn_match_ratio * dist2) {
+        return true;
+    }else{
+        return false;
+    }
+}
+
 
 template <typename JavaArrayType>
 size_t SafeGetArrayLength(JNIEnv* env, JavaArrayType jarray) {
@@ -63,4 +87,289 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
     }
 
     return 1;
+}
+
+JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_getFeatrueExtractedImages
+        (JNIEnv *env, jobject obj, jlongArray originalImagesAddrs, jlongArray resultImagesAddrs, jint size){
+
+    vector<jlong> originalVec;
+    vector<jlong> resultVec;
+
+    JavaLongArrayToLongVector(env, originalImagesAddrs, &originalVec);
+    JavaLongArrayToLongVector(env, resultImagesAddrs, &resultVec);
+
+    for(int i =0; i < size; i++){
+        Mat& mRgb = *(Mat*)(originalVec[i]);
+        Mat& mGray = *(Mat*)(resultVec[i]);
+
+        cvtColor(mRgb, mGray, CV_RGBA2GRAY);
+
+        std::vector<cv::KeyPoint> keypoints;
+        cv::Mat descriptors;
+        extractFeatureUsingFAST(mGray, keypoints, descriptors);
+
+        ALOG("Num of points %d", keypoints.size());
+
+        for(int j =0 ; j < keypoints.size(); j++){
+            KeyPoint point = keypoints[j];
+            setPixelColor(mGray, point.pt.x, point.pt.y, 5);
+        }
+    }
+
+    return 1;
+}
+
+JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_getMatchedFeatureImages
+        (JNIEnv *env, jobject obj, jlongArray originalImagesAddrs, jlongArray resultImagesAddrs, jint size){
+
+    int numOfImages = size;
+    vector<jlong> originalVec;
+    vector<jlong> resultVec;
+
+    JavaLongArrayToLongVector(env, originalImagesAddrs, &originalVec);
+    JavaLongArrayToLongVector(env, resultImagesAddrs, &resultVec);
+
+    vector< std::vector<cv::KeyPoint> > keyPointsVec;
+    vector<Mat> descriptorsVec;
+
+    for(int i =0; i < size; i++){
+        Mat& mRgb = *(Mat*)(originalVec[i]);
+        Mat& mGray = *(Mat*)(resultVec[i]);
+
+        cvtColor(mRgb, mGray, CV_RGBA2GRAY);
+
+        std::vector<cv::KeyPoint> keypoints;
+        cv::Mat descriptors;
+        extractFeatureUsingFAST(mGray, keypoints, descriptors);
+
+        keyPointsVec.push_back(keypoints);
+        descriptorsVec.push_back(descriptors);
+
+        ALOG("Num of Features %d", keypoints.size());
+    }
+
+    ALOG("Start of matching");
+    cv::BFMatcher matcher(cv::NORM_HAMMING);
+    std::vector< std::vector< std::vector<DMatch> > > matchedList;
+
+    for( int i =1; i < numOfImages; i++){
+        std::vector< std::vector<DMatch> > nn_matches;
+        matcher.knnMatch(descriptorsVec[i-1], descriptorsVec[i], nn_matches, 2);
+        matchedList.push_back(nn_matches);
+    }
+    ALOG("Finished Matching");
+
+    std::vector< std::vector<int> > queryIndexes;
+    std::vector< std::vector<DMatch> > first_nn_matches = matchedList[0];
+
+    for( int i =0 ;i < first_nn_matches.size(); i++){
+        std::vector<int> queries;
+        int queryIdx = first_nn_matches[i][0].queryIdx;
+        int trainIdx = first_nn_matches[i][0].trainIdx;
+        queries.push_back( queryIdx );
+        queries.push_back( trainIdx );
+
+        if(isInliner(first_nn_matches, queryIdx)){
+            bool inliner = false;
+
+            for(int j = 1; j < matchedList.size(); j++){
+                int nextTrainIdx = matchedList[j][trainIdx][0].trainIdx;
+                if(isInliner(matchedList[j], trainIdx)){
+                    queries.push_back(nextTrainIdx);
+                    trainIdx = nextTrainIdx;
+                    inliner = true;
+                }else{
+                    inliner = false;
+                    break;
+                }
+            }
+
+            if(inliner){
+                queryIndexes.push_back(queries);
+            }
+        }
+    }
+
+    ALOG("Matched Num : %d", queryIndexes.size());
+
+    for( int i =0; i < queryIndexes.size(); i++){
+        std::vector<int> queries = queryIndexes[i];
+
+        for(int j = 0; j < queries.size(); j++){
+            int index = queries[j];
+            Mat& mGray = *(Mat*)(resultVec[j]);
+            Point2f point = keyPointsVec[j][index].pt;
+            setPixelColor(mGray, point.x, point.y, 5);
+        }
+    }
+
+    return 1;
+}
+
+JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_getStabilizedImages
+        (JNIEnv *env, jobject obj, jlongArray originalImagesAddrs, jlongArray resultImagesAddrs, jint size){
+
+    try {
+        int numOfImages =size;
+
+        vector<jlong> originalVec;
+        vector<jlong> resultVec;
+
+        JavaLongArrayToLongVector(env, originalImagesAddrs, &originalVec);
+        JavaLongArrayToLongVector(env, resultImagesAddrs, &resultVec);
+
+        vector< std::vector<cv::KeyPoint> > keyPointsVec;
+        vector<Mat> descriptorsVec;
+
+        for(int i =0; i < numOfImages; i++){
+            Mat& mRgb = *(Mat*)(originalVec[i]);
+            Mat mGray;
+
+            cvtColor(mRgb, mGray, CV_RGBA2GRAY);
+
+            std::vector<cv::KeyPoint> keypoints;
+            cv::Mat descriptors;
+            extractFeatureUsingFAST(mGray, keypoints, descriptors);
+
+            keyPointsVec.push_back(keypoints);
+            descriptorsVec.push_back(descriptors);
+
+            ALOG("Num of Features %d", keypoints.size());
+
+            if(keypoints.size() < 3){
+                return 0;
+            }
+        }
+
+        ALOG("Start of matching");
+        cv::BFMatcher matcher(cv::NORM_HAMMING);
+        std::vector< std::vector< std::vector<DMatch> > > matchedList;
+
+        for( int i =1; i < numOfImages; i++){
+            std::vector< std::vector<DMatch> > nn_matches;
+            matcher.knnMatch(descriptorsVec[i-1], descriptorsVec[i], nn_matches, 2);
+            matchedList.push_back(nn_matches);
+        }
+        ALOG("Finished Matching");
+
+        std::vector< std::vector<int> > queryIndexes;
+        std::vector< std::vector<DMatch> > first_nn_matches = matchedList[0];
+
+        for( int i =0 ;i < first_nn_matches.size(); i++){
+            std::vector<int> queries;
+            int queryIdx = first_nn_matches[i][0].queryIdx;
+            int trainIdx = first_nn_matches[i][0].trainIdx;
+            queries.push_back( queryIdx );
+            queries.push_back( trainIdx );
+
+            if(isInliner(first_nn_matches, queryIdx)){
+                bool inliner = false;
+
+                for(int j = 1; j < matchedList.size(); j++){
+                    //                std::vector< std::vector<DMatch> > nn_matcher = matchedList[j];
+                    int nextTrainIdx = matchedList[j][trainIdx][0].trainIdx;
+
+                    if(isInliner(matchedList[j], trainIdx)){
+                        queries.push_back(nextTrainIdx);
+                        trainIdx = nextTrainIdx;
+                        inliner = true;
+                    }else{
+                        inliner = false;
+                        break;
+                    }
+                }
+
+                if(inliner){
+                    queryIndexes.push_back(queries);
+                }
+            }
+        }
+
+        ALOG("Find Inliner Matched Num : %d", queryIndexes.size());
+
+        if(queryIndexes.size() <= 3){
+            // 점이 충분하지않으므로 기존 이미지를 넘겨줌
+            return 0;
+        }
+
+        vector< vector<cv::Point2f> > resultFeature;
+        for( int i = 0; i < numOfImages; i++){
+            vector<cv::Point2f> feature;
+            resultFeature.push_back(feature);
+        }
+
+        for( int i =0; i < queryIndexes.size(); i++){
+            std::vector<int> queries = queryIndexes[i];
+
+            for(int j = 0; j < queries.size(); j++){
+                int index = queries[j];
+                Point2f point = keyPointsVec[j][index].pt;
+                resultFeature[j].push_back(point);
+            }
+        }
+
+        Mat& firstTargetImageMat = *(Mat*)(originalVec[0]);
+        Mat& firstResultImageMat = *(Mat*)(resultVec[0]);
+        firstTargetImageMat.copyTo(firstResultImageMat);
+
+        Mat prevH;
+
+        for( int i = 1; i < numOfImages; i++){
+            Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
+
+            if(R.cols ==0 && R.rows ==0){
+                // Estimate 가 잘 안된경우
+                return 0;
+            }
+
+            cv::Mat H = cv::Mat(3,3,R.type());
+            H.at<double>(0,0) = R.at<double>(0,0);
+            H.at<double>(0,1) = R.at<double>(0,1);
+            H.at<double>(0,2) = R.at<double>(0,2);
+
+            H.at<double>(1,0) = R.at<double>(1,0);
+            H.at<double>(1,1) = R.at<double>(1,1);
+            H.at<double>(1,2) = R.at<double>(1,2);
+
+            H.at<double>(2,0) = 0.0;
+            H.at<double>(2,1) = 0.0;
+            H.at<double>(2,2) = 1.0;
+
+
+            Mat& targetImageMat = *(Mat*)(originalVec[i]);
+            int rows = targetImageMat.rows;
+            int cols = targetImageMat.cols;
+
+            Mat& res = *(Mat*)(resultVec[i]);
+
+            if(i==1){
+                prevH = H;
+            }else{
+                prevH = prevH*H;
+            }
+
+            Mat* pMat = new Mat(3,3,CV_64F);
+            pMat->at<double>(0,0) = prevH.at<double>(0,0);
+            pMat->at<double>(0,1) = prevH.at<double>(0,1);
+            pMat->at<double>(0,2) = prevH.at<double>(0,2);
+
+            pMat->at<double>(1,0) = prevH.at<double>(1,0);
+            pMat->at<double>(1,1) = prevH.at<double>(1,1);
+            pMat->at<double>(1,2) = prevH.at<double>(1,2);
+
+            pMat->at<double>(2,0) = 0.0;
+            pMat->at<double>(2,1) = 0.0;
+            pMat->at<double>(2,2) = 1.0;
+
+            warpPerspective(targetImageMat, res, prevH, cv::Size(cols, rows));
+
+        }
+
+        ALOG("end ot estimate");
+
+
+        return 1;
+    }catch(cv::Exception &e){
+        return 0;
+    }
 }
