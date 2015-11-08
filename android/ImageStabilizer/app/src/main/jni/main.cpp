@@ -69,6 +69,30 @@ void findCropAreaWithHMatrics(Mat &hMat, int width, int height, vector<int>& res
     resultVec.push_back(bottom);
 }
 
+Mat cropImage(Mat& image,int left, int right, int top, int bottom){
+    int width = right-left;
+    int height = bottom-top;
+
+    float ratio = (float)image.cols/(float)image.rows;
+
+    if(width/ratio > height){
+        width = height*ratio;
+    }else{
+        height = width/ratio;
+    }
+
+    cv::Mat result(height,width, CV_8UC4);
+    result.setTo(0);
+
+    for(int row =0 ;row < result.rows; row++){
+        for(int col=0; col < result.cols; col++){
+            result.at<cv::Vec4b>(row,col) = image.at<cv::Vec4b>(row+top, col+left);
+        }
+    }
+
+    return result;
+}
+
 void extractFeatureUsingFAST(Mat& imageMat, vector<KeyPoint>& keyPoints, Mat& descriptor){
     Ptr<FastFeatureDetector> fast = FastFeatureDetector::create();
     fast->setThreshold(20);
@@ -345,8 +369,10 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
         }
 
         Mat& firstTargetImageMat = *(Mat*)(originalVec[0]);
-        Mat& firstResultImageMat = *(Mat*)(resultVec[0]);
+        Mat firstResultImageMat(firstTargetImageMat.rows, firstTargetImageMat.cols, CV_8UC4);
         firstTargetImageMat.copyTo(firstResultImageMat);
+        vector<Mat> resultMats;
+        resultMats.push_back(firstResultImageMat);
 
         Mat prevH;
         vector< vector<int> > cropAreas;
@@ -377,7 +403,8 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
             int rows = targetImageMat.rows;
             int cols = targetImageMat.cols;
 
-            Mat& res = *(Mat*)(resultVec[i]);
+            Mat res(rows, cols, CV_8UC4);
+            resultMats.push_back(res);
 
             if(i==1){
                 prevH = H;
@@ -444,6 +471,14 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
 
         if(maxDiff > 0.1){
             return 0;
+        }
+
+        for(int i = 0; i < numOfImages; i++){
+            Mat mat = resultMats[i];
+            Mat cropedMat = cropImage(mat, left, right, top, bottom);
+
+            Mat& finalMat = *(Mat*)(resultVec[i]);
+            resize(cropedMat, finalMat, finalMat.size());
         }
 
         return 1;
