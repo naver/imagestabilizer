@@ -33,7 +33,7 @@ void setPixelColor(Mat& cvMat, int posX, int posY, int size){
     }
 }
 
-void findCropAreaWithHMatrics:(Mat &hMat, int width, int height, vector<int>& resultVec){
+void findCropAreaWithHMatrics(Mat &hMat, int width, int height, vector<int>& resultVec){
     Mat topLeftPoint = (Mat_<double>(3,1) << 0, 0, 1);
     Mat topRightPoint = (Mat_<double>(3,1) << width, 0, 1);
     Mat bottomLeftPoint = (Mat_<double>(3,1) << 0, height,1);
@@ -407,6 +407,44 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
 
         ALOG("end ot estimate");
 
+        ALOG("find crop area");
+        int left = 0; int top = 0; int right = firstTargetImageMat.cols; int bottom = firstTargetImageMat.rows;
+
+        for(int i = 0; i < cropAreas.size(); i++){
+            vector<int> cropArea = cropAreas[i];
+
+            int targetLeft = cropArea[0];
+            int targetRight = cropArea[1];
+            int targetTop = cropArea[2];
+            int targetBottom = cropArea[3];
+
+            if(left < targetLeft){
+                left = targetLeft;
+            }
+            if(right > targetRight){
+                right = targetRight;
+            }
+            if(top<targetTop){
+                top = targetTop;
+            }
+            if(bottom>targetBottom){
+                bottom = targetBottom;
+            }
+        }
+
+        float imageWidth = firstTargetImageMat.cols;
+        float imageHeight = firstTargetImageMat.rows;
+        float maxDiff = 0.0;
+        maxDiff = maxDiff < (float)left/imageWidth ? (float)left/imageWidth : maxDiff;
+        maxDiff = maxDiff < abs(imageWidth - right)/imageWidth ? abs(imageWidth - right)/imageWidth : maxDiff;
+        maxDiff = maxDiff < (float)top/imageHeight ? (float)top/imageHeight : maxDiff;
+        maxDiff = maxDiff < abs(imageHeight - bottom)/imageHeight ? abs(imageHeight - bottom)/imageHeight : maxDiff;
+
+        ALOG("Max Diff : %lf", maxDiff);
+
+        if(maxDiff > 0.1){
+            return 0;
+        }
 
         return 1;
     }catch(cv::Exception &e){
