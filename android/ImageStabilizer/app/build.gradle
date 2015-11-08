@@ -10,7 +10,28 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        ndk{
+            moduleName "ImageStabilizer"
+        }
     }
+
+    // add begin
+    sourceSets.main.jni.srcDirs = []
+
+    task ndkBuild(type: Exec, description: 'Compile JNI source via NDK') {
+        commandLine "/Users/eunchuljeon/Library/Android/ndk/ndk-build",
+                'NDK_PROJECT_PATH=build/intermediates/ndk',
+                'NDK_LIBS_OUT=src/main/jniLibs',
+                'APP_BUILD_SCRIPT=src/main/jni/Android.mk',
+                'NDK_APPLICATION_MK=src/main/jni/Application.mk'
+    }
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn ndkBuild
+    }
+    // add end
+
+
     buildTypes {
         release {
             minifyEnabled false
