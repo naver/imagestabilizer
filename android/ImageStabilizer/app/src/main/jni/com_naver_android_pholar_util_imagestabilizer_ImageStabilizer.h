@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     com_naver_android_pholar_util_imagestabilizer_ImageStabilizer
+ * Method:    hello
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_hello
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_naver_android_pholar_util_imagestabilizer_ImageStabilizer
  * Method:    getGrayImages
  * Signature: ([J[JI)I
  */

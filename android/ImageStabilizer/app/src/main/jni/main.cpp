@@ -2,7 +2,6 @@
 // Created by Eunchul on 2015. 11. 7..
 //
 
-#include "com_naver_android_pholar_util_imagestabilizer_MainActivity.h"
 #include "com_naver_android_pholar_util_imagestabilizer_ImageStabilizer.h"
 
 #include <opencv2/core/core.hpp>
@@ -18,7 +17,8 @@ using namespace cv;
 #define  LOG_TAG    "JNI_LOG"
 #define  ALOG(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 
-JNIEXPORT jstring JNICALL Java_com_naver_android_pholar_util_imagestabilizer_MainActivity_hello
+
+JNIEXPORT jstring JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageStabilizer_hello
         (JNIEnv *env, jobject obj){
     return env->NewStringUTF("Hello from JNI");
 }

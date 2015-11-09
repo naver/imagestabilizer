@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasResultImage = false;
     private ImageStabilizer stabilizer = new ImageStabilizer();
 
-    public native String hello();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
 
         mTimer = new Timer();
         mTimer.schedule(mTask, 200, 200);
+
+        String checkStr = stabilizer.checkLibraryConnection();
+        Log.d("Library Check", checkStr);
     }
 
     @Override

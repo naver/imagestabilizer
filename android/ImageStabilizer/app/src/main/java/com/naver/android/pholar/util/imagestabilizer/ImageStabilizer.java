@@ -26,10 +26,15 @@ public class ImageStabilizer {
         }
     }
 
+    public native String hello();
     public native int getGrayImages(long[] orignalMats, long[] resultMats, int numOfImages);
     public native int getFeatrueExtractedImages(long[] orignalMats, long[] resultMats, int numOfImages);
     public native int getMatchedFeatureImages(long[] orignalMats, long[] resultMats, int numOfImages);
     public native int getStabilizedImages(long[] originalMats, long[] resultMats, int numOfImages);
+
+    public String checkLibraryConnection(){
+        return hello();
+    }
 
     public ArrayList<Bitmap> featureExtraction(ArrayList<Bitmap> originals){
         ArrayList<Bitmap> results = new ArrayList<Bitmap>();
