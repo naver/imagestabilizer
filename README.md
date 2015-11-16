@@ -54,7 +54,7 @@ So I want to improve this code to use GPU like GPUImage.
 * https://www.willowgarage.com/sites/default/files/orb_final.pdf
 
 ## License
-ImageStabilizerIOS is licensed under the Apache License, Version 2.0.
+ImageStabilizer is licensed under the Apache License, Version 2.0.
 See [LICENSE](/docs/LICENSE.txt) for full license text.
 
         Copyright (c) 2015 Naver Corp.
