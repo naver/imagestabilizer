@@ -119,6 +119,24 @@ using namespace cv;
     return result;
 }
 
++(cv::Mat) mergeImage:(cv::Mat)image1 another:(cv::Mat)image2 rect:(CGRect)r{
+    cv::Mat result(image1.rows, image1.cols, CV_8UC4);
+    image1.copyTo(result);
+    
+    for(int row = r.origin.y; row < (r.origin.y+r.size.height); row++){
+        for( int col = r.origin.x; col < (r.origin.x+r.size.width); col++){
+            cv::Vec4b c = image2.at<cv::Vec4b>(col,row);
+//            c[0] = 255;
+//            c[1] = 0;
+//            c[2] = 0;
+//            c[3] = 255;
+            result.at<cv::Vec4b>(col,row) = c;
+        }
+    }
+
+    return result;
+}
+
 +(cv::Mat) removeEdge:(cv::Mat)image edge:(NSInteger)edgeSize{
     int rows = image.rows;
     int cols = image.cols;
@@ -150,6 +168,71 @@ using namespace cv;
     return image;
 }
 
++ (NSArray*) findCropAreaWithHMatrics:(cv::Mat)hMat imageWidth:(int)width imageHeight:(int)height{
+    Mat topLeftPoint = (Mat_<double>(3,1) << 0, 0, 1);
+    Mat topRightPoint = (Mat_<double>(3,1) << width, 0, 1);
+    Mat bottomLeftPoint = (Mat_<double>(3,1) << 0, height,1);
+    Mat bottomRightPoint = (Mat_<double>(3,1) << width, height,1);
+    
+    topLeftPoint = hMat*topLeftPoint;
+    topRightPoint = hMat*topRightPoint;
+    bottomLeftPoint = hMat*bottomLeftPoint;
+    bottomRightPoint = hMat*bottomRightPoint;
+    
+    print(topLeftPoint);
+    NSLog(@"next");
+    print(topRightPoint);
+    NSLog(@"next");
+    print(bottomLeftPoint);
+    NSLog(@"next");
+    print(bottomRightPoint);
+    NSLog(@"next");
+    int left = topLeftPoint.at<double>(0,0) > bottomLeftPoint.at<double>(0,0) ? ceil(topLeftPoint.at<double>(0,0)) : ceil(bottomLeftPoint.at<double>(0,0));
+    int right = topRightPoint.at<double>(0,0) < bottomRightPoint.at<double>(0,0) ? floor(topRightPoint.at<double>(0,0)) : floor(bottomRightPoint.at<double>(0,0));
+    int top = topLeftPoint.at<double>(1,0) > topRightPoint.at<double>(1,0) ? ceil(topLeftPoint.at<double>(1,0)) : ceil(topRightPoint.at<double>(1,0));
+    int bottom = bottomLeftPoint.at<double>(1,0) < bottomRightPoint.at<double>(1,0) ? floor(bottomLeftPoint.at<double>(1,0)) : floor(bottomRightPoint.at<double>(1,0));
+    
+    if(left < 0){
+        left = 0;
+    }
+    if(right > width){
+        right = width;
+    }
+    if(top < 0){
+        top = 0;
+    }
+    if(bottom > height){
+        bottom = height;
+    }
+    
+    return @[[NSNumber numberWithInt:left],[NSNumber numberWithInt:right],[NSNumber numberWithInt:top],[NSNumber numberWithInt:bottom]];
+}
+
++ (Mat) cropImage:(Mat) image left:(int)left right:(int)right top:(int)top bottom:(int)bottom{
+    int width = right-left;
+    int height = bottom-top;
+    
+    float ratio = (float)image.cols/(float)image.rows;
+    
+    if(width/ratio > height){
+        width = height*ratio;
+    }else{
+        height = width/ratio;
+    }
+
+    
+    cv::Mat result(height,width, CV_8UC4);
+    result.setTo(0);
+
+    for(int row =0 ;row < result.rows; row++){
+        for(int col=0; col < result.cols; col++){
+            result.at<cv::Vec4b>(row,col) = image.at<cv::Vec4b>(row+top, col+left);
+        }
+    }
+
+    return result;
+}
+
 + (void)saveImage:(UIImage *)imageToSave fileName:(NSString *)imageName
 {
     NSData *dataForPNGFile = UIImagePNGRepresentation(imageToSave);
@@ -175,7 +258,7 @@ using namespace cv;
 }
 
 + (void)setPixelColor:(cv::Mat)cvMat posX:(NSInteger)posX posY:(NSInteger)posY size:(NSInteger)size color:(UIColor *)color{
-//    cv::Vec4b c = cvMat.at<cv::Vec4b>(cv::Point(posY, posX));
+    //    cv::Vec4b c = cvMat.at<cv::Vec4b>(cv::Point(posY, posX));
     
     cv::Vec4b c = [OpenCVUtils convertUIColorToVect:color];
     
@@ -193,11 +276,11 @@ using namespace cv;
     NSURL *documentsURL = [NSURL URLWithString:documentsDirectory];
     
     NSURL *destinationURL = [documentsURL URLByAppendingPathComponent:fileName];
-
-
+    
+    
     
     // Now you can write to the file....
-
+    
     NSError *writeError = nil;
     [data writeToFile:[destinationURL absoluteString] atomically:YES encoding:NSUTF8StringEncoding error:&writeError];
     NSLog(@"File : %@", [destinationURL absoluteString]);

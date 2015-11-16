@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		900008AF1BB2427900D3BEC3 /* ImageStabilizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 900008AE1BB2427900D3BEC3 /* ImageStabilizer.mm */; };
+		904B15501BD4E4C900E99294 /* ImageStabilizerWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 904B154F1BD4E4C900E99294 /* ImageStabilizerWrapper.mm */; settings = {ASSET_TAGS = (); }; };
 		90DB83091BA3D54C005CBB9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83081BA3D54C005CBB9C /* main.m */; };
 		90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830B1BA3D54C005CBB9C /* AppDelegate.m */; };
 		90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830E1BA3D54C005CBB9C /* ViewController.mm */; };
@@ -33,6 +34,8 @@
 /* Begin PBXFileReference section */
 		900008AD1BB2427900D3BEC3 /* ImageStabilizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageStabilizer.h; sourceTree = "<group>"; };
 		900008AE1BB2427900D3BEC3 /* ImageStabilizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageStabilizer.mm; sourceTree = "<group>"; };
+		904B154E1BD4E4C900E99294 /* ImageStabilizerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageStabilizerWrapper.h; sourceTree = "<group>"; };
+		904B154F1BD4E4C900E99294 /* ImageStabilizerWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageStabilizerWrapper.mm; sourceTree = "<group>"; };
 		90DB83031BA3D54C005CBB9C /* ImageStabilization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageStabilization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90DB83071BA3D54C005CBB9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90DB83081BA3D54C005CBB9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -142,6 +145,8 @@
 				90DB83381BA3F304005CBB9C /* FeatureExtractor.mm */,
 				90DB833A1BA3F371005CBB9C /* OpenCVUtils.h */,
 				90DB833B1BA3F371005CBB9C /* OpenCVUtils.mm */,
+				904B154E1BD4E4C900E99294 /* ImageStabilizerWrapper.h */,
+				904B154F1BD4E4C900E99294 /* ImageStabilizerWrapper.mm */,
 				900008AD1BB2427900D3BEC3 /* ImageStabilizer.h */,
 				900008AE1BB2427900D3BEC3 /* ImageStabilizer.mm */,
 			);
@@ -252,6 +257,7 @@
 				90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */,
 				90DB83391BA3F304005CBB9C /* FeatureExtractor.mm in Sources */,
 				90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */,
+				904B15501BD4E4C900E99294 /* ImageStabilizerWrapper.mm in Sources */,
 				90DB833C1BA3F371005CBB9C /* OpenCVUtils.mm in Sources */,
 				900008AF1BB2427900D3BEC3 /* ImageStabilizer.mm in Sources */,
 				90DB83091BA3D54C005CBB9C /* main.m in Sources */,

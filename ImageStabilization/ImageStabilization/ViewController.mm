@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "FeatureExtractor.h"
 #import "ImageStabilizer.h"
+#import "ImageStabilizerWrapper.h"
 
 
 typedef NS_ENUM(NSInteger, DataSet){
@@ -16,14 +17,30 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_2 = 1,
     DATASET_3 = 2,
     DATASET_4 = 3,
+    DATASET_5 = 4,
+    DATASET_6 = 5,
+    DATASET_7 = 6,
+    DATASET_8 = 7,
+    DATASET_9 = 8,
+    DATASET_10 = 9,
+    DATASET_11 = 10,
+    DATASET_12 = 11,
+    DATASET_13 = 12,
+    DATASET_14 = 13,
+    DATASET_15 = 14,
+    DATASET_16 = 15,
+    DATASET_17 = 16,
+    DATASET_18 = 17
 };
 
-#define DEFAULT_DATASET DATASET_4
+#define DEFAULT_DATASET DATASET_18
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 0.2
+#define END_OF_DATASET DATASET_18
 
 @interface ViewController ()
-@property(nonatomic, strong) ImageStabilizer* stabilizer;
+@property (nonatomic, strong) ImageStabilizerWrapper* stabilizerWrapper;
+@property (nonatomic, strong) ImageStabilizer* stabilizer;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageViewer2;
 @property (weak, nonatomic) IBOutlet UISlider *timerSlider;
@@ -46,6 +63,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     _animationDirection = 1;
     
     self.stabilizer = [[ImageStabilizer alloc] init];
+    self.stabilizerWrapper = [[ImageStabilizerWrapper alloc] init];
     [self setDefaultImages];
     self.currentIndex = 0;
     self.showResults = NO;
@@ -130,10 +148,11 @@ typedef NS_ENUM(NSInteger, DataSet){
         [targetImages addObject:[UIImage imageNamed:self.images[i]]];
     }
     
-    NSArray* result = [self.stabilizer stabilizedWithImageList:targetImages];
+    NSArray* result = [self.stabilizerWrapper getStabilizedImages:targetImages];
     
     for(int i  = 0; i < [result count]; i++){
         [self.resultImages addObject:[result objectAtIndex:i]];
+        NSLog(@"Image Size : %lf %lf", [self.resultImages[0] size].width, [self.resultImages[0] size].height);
     }
     
     _showResults = YES;
@@ -179,6 +198,34 @@ typedef NS_ENUM(NSInteger, DataSet){
         self.images = @[@"data_3_1.jpg",@"data_3_2.jpg",@"data_3_3.jpg",@"data_3_4.jpg",@"data_3_5.jpg"];
     }else if( _datasetIndex == DATASET_4){
         self.images = @[@"data_4_1.jpg",@"data_4_2.jpg",@"data_4_3.jpg",@"data_4_4.jpg",@"data_4_5.jpg"];
+    }else if( _datasetIndex == DATASET_5){
+        self.images = @[@"data_5_1.jpg",@"data_5_2.jpg",@"data_5_3.jpg",@"data_5_4.jpg",@"data_5_5.jpg"];
+    }else if( _datasetIndex == DATASET_6){
+        self.images = @[@"data_6_1.jpg",@"data_6_2.jpg",@"data_6_3.jpg",@"data_6_4.jpg",@"data_6_5.jpg", @"data_6_6.jpg"];
+    }else if( _datasetIndex == DATASET_7){
+        self.images = @[@"data_7_1.jpg",@"data_7_2.jpg",@"data_7_3.jpg",@"data_7_4.jpg",@"data_7_5.jpg", @"data_7_6.jpg"];
+    }else if( _datasetIndex == DATASET_8){
+        self.images = @[@"data_8_1.jpg",@"data_8_2.jpg",@"data_8_3.jpg",@"data_8_4.jpg",@"data_8_5.jpg", @"data_8_6.jpg", @"data_8_7.jpg", @"data_8_8.jpg"];
+    }else if( _datasetIndex == DATASET_9){
+        self.images = @[@"data_9_1.jpg",@"data_9_2.jpg",@"data_9_3.jpg",@"data_9_4.jpg",@"data_9_5.jpg"];
+    }else if( _datasetIndex == DATASET_10){
+        self.images = @[@"data_10_1.jpg",@"data_10_2.jpg",@"data_10_3.jpg",@"data_10_4.jpg",@"data_10_5.jpg"];
+    }else if( _datasetIndex == DATASET_11){
+        self.images = @[@"data_11_1.jpg",@"data_11_2.jpg",@"data_11_3.jpg",@"data_11_4.jpg",@"data_11_5.jpg"];
+    }else if( _datasetIndex == DATASET_12){
+        self.images = @[@"data_12_1.jpg",@"data_12_2.jpg",@"data_12_3.jpg",@"data_12_4.jpg",@"data_12_5.jpg"];
+    }else if( _datasetIndex == DATASET_13){
+        self.images = @[@"data_13_1.jpg",@"data_13_2.jpg",@"data_13_3.jpg",@"data_13_4.jpg",@"data_13_5.jpg"];
+    }else if( _datasetIndex == DATASET_14){
+        self.images = @[@"data_14_1.jpg",@"data_14_2.jpg",@"data_14_3.jpg",@"data_14_4.jpg",@"data_14_5.jpg"];
+    }else if( _datasetIndex == DATASET_15){
+        self.images = @[@"data_15_1.jpg",@"data_15_2.jpg",@"data_15_3.jpg",@"data_15_4.jpg",@"data_15_5.jpg"];
+    }else if( _datasetIndex == DATASET_16){
+        self.images = @[@"data_16_1.jpg",@"data_16_2.jpg",@"data_16_3.jpg",@"data_16_4.jpg",@"data_16_5.jpg"];
+    }else if( _datasetIndex == DATASET_17){
+        self.images = @[@"data_17_1.jpg",@"data_17_2.jpg",@"data_17_3.jpg",@"data_17_4.jpg",@"data_17_5.jpg",@"data_17_6.jpg"];
+    }else if( _datasetIndex == DATASET_18){
+        self.images = @[@"data_18_1.jpg",@"data_18_2.jpg",@"data_18_3.jpg",@"data_18_4.jpg",@"data_18_5.jpg"];
     }
 }
 
@@ -192,13 +239,16 @@ typedef NS_ENUM(NSInteger, DataSet){
 - (IBAction)nextImageSetClicked:(id)sender {
     int nextIndex = _datasetIndex +1;
     
-    if(nextIndex > DATASET_4){
+    if(nextIndex > END_OF_DATASET){
         nextIndex = 0;
     }
     
     _datasetIndex = (DataSet)nextIndex;
     _showResults = false;
+    _currentIndex = 0;
+    _animationDirection = 1;
     [self setDefaultImages];
+    [_stabilizerWrapper resetStabilizer];
 }
 
 @end
