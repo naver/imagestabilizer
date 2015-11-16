@@ -1,5 +1,5 @@
-# ImageStabilizerIOS
-Image stabilization using features detector in IOS
+# ImageStabilizer
+Image stabilization using features detector in IOS and Android
 
 ## Overview
 Image stabilization is a essential technique when you take images using continuous shooting.
@@ -36,6 +36,11 @@ Set first image to compare with others.
 Get stabilized image
 ```objectiveC
   -(UIImage*) stabilizeImage:(UIImage*)targetImage;
+```
+
+Get stabilized image in android
+```java
+public ArrayList<Bitmap> stabilizedImages(ArrayList<Bitmap> originals);
 ```
 
 ## Limitation
