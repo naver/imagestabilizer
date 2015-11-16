@@ -24,7 +24,7 @@ JNIEXPORT jstring JNICALL Java_com_naver_android_pholar_util_imagestabilizer_Ima
 }
 
 void setPixelColor(Mat& cvMat, int posX, int posY, int size){
-    Vec4b c = {0,0,0,0};
+    Vec4b c = {255,0,0,255};
 
     for( int dx = (posX-size/2); dx < (posX+size/2); dx++){
         for( int dy = (posY - size/2); dy < (posY+size/2); dy++){
@@ -161,12 +161,14 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
     for(int i =0; i < size; i++){
         Mat& mRgb = *(Mat*)(originalVec[i]);
         Mat& mGray = *(Mat*)(resultVec[i]);
+        Mat grayMat;
 
-        cvtColor(mRgb, mGray, CV_RGBA2GRAY);
+        cvtColor(mRgb, grayMat, CV_RGBA2GRAY);
+        cvtColor(grayMat, mGray, CV_GRAY2RGBA);
 
         std::vector<cv::KeyPoint> keypoints;
         cv::Mat descriptors;
-        extractFeatureUsingFAST(mGray, keypoints, descriptors);
+        extractFeatureUsingFAST(grayMat, keypoints, descriptors);
 
         ALOG("Num of points %d", keypoints.size());
 
@@ -194,13 +196,15 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
 
     for(int i =0; i < size; i++){
         Mat& mRgb = *(Mat*)(originalVec[i]);
+        Mat grayMat;
         Mat& mGray = *(Mat*)(resultVec[i]);
 
-        cvtColor(mRgb, mGray, CV_RGBA2GRAY);
+        cvtColor(mRgb, grayMat, CV_RGBA2GRAY);
+        cvtColor(grayMat, mGray, CV_GRAY2RGBA);
 
         std::vector<cv::KeyPoint> keypoints;
         cv::Mat descriptors;
-        extractFeatureUsingFAST(mGray, keypoints, descriptors);
+        extractFeatureUsingFAST(grayMat, keypoints, descriptors);
 
         keyPointsVec.push_back(keypoints);
         descriptorsVec.push_back(descriptors);
@@ -283,13 +287,13 @@ JNIEXPORT jint JNICALL Java_com_naver_android_pholar_util_imagestabilizer_ImageS
 
         for(int i =0; i < numOfImages; i++){
             Mat& mRgb = *(Mat*)(originalVec[i]);
-            Mat mGray;
+            Mat grayMat;
 
-            cvtColor(mRgb, mGray, CV_RGBA2GRAY);
+            cvtColor(mRgb, grayMat, CV_RGBA2GRAY);
 
             std::vector<cv::KeyPoint> keypoints;
             cv::Mat descriptors;
-            extractFeatureUsingFAST(mGray, keypoints, descriptors);
+            extractFeatureUsingFAST(grayMat, keypoints, descriptors);
 
             keyPointsVec.push_back(keypoints);
             descriptorsVec.push_back(descriptors);
