@@ -10,6 +10,7 @@
 
 @interface ImageStabilizerWrapper : NSObject
 -(NSArray*) getStabilizedImages:(NSArray*)originalImages;
+-(NSArray*) getOpticalFlowImages:(NSArray*)originalImages;
 -(BOOL) isStabilizerEnabled;
 -(void) resetStabilizer;
 @end

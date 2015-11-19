@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		900008AF1BB2427900D3BEC3 /* ImageStabilizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 900008AE1BB2427900D3BEC3 /* ImageStabilizer.mm */; };
-		904B15501BD4E4C900E99294 /* ImageStabilizerWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 904B154F1BD4E4C900E99294 /* ImageStabilizerWrapper.mm */; settings = {ASSET_TAGS = (); }; };
+		904B15501BD4E4C900E99294 /* ImageStabilizerWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 904B154F1BD4E4C900E99294 /* ImageStabilizerWrapper.mm */; };
+		907488EC1BFC14D3005D0E0E /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907488EB1BFC14D3005D0E0E /* AssetsLibrary.framework */; };
+		907488EE1BFC1763005D0E0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907488ED1BFC1763005D0E0E /* MobileCoreServices.framework */; };
+		907488F11BFC1A93005D0E0E /* GIFMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 907488F01BFC1A93005D0E0E /* GIFMaker.m */; };
 		90DB83091BA3D54C005CBB9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB83081BA3D54C005CBB9C /* main.m */; };
 		90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830B1BA3D54C005CBB9C /* AppDelegate.m */; };
 		90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90DB830E1BA3D54C005CBB9C /* ViewController.mm */; };
@@ -36,6 +39,10 @@
 		900008AE1BB2427900D3BEC3 /* ImageStabilizer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageStabilizer.mm; sourceTree = "<group>"; };
 		904B154E1BD4E4C900E99294 /* ImageStabilizerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageStabilizerWrapper.h; sourceTree = "<group>"; };
 		904B154F1BD4E4C900E99294 /* ImageStabilizerWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImageStabilizerWrapper.mm; sourceTree = "<group>"; };
+		907488EB1BFC14D3005D0E0E /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		907488ED1BFC1763005D0E0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		907488EF1BFC1A93005D0E0E /* GIFMaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFMaker.h; sourceTree = "<group>"; };
+		907488F01BFC1A93005D0E0E /* GIFMaker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFMaker.m; sourceTree = "<group>"; };
 		90DB83031BA3D54C005CBB9C /* ImageStabilization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageStabilization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90DB83071BA3D54C005CBB9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		90DB83081BA3D54C005CBB9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -62,6 +69,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				907488EE1BFC1763005D0E0E /* MobileCoreServices.framework in Frameworks */,
+				907488EC1BFC14D3005D0E0E /* AssetsLibrary.framework in Frameworks */,
 				90DB832F1BA3DC05005CBB9C /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,6 +88,8 @@
 		90DB82FA1BA3D54C005CBB9C = {
 			isa = PBXGroup;
 			children = (
+				907488ED1BFC1763005D0E0E /* MobileCoreServices.framework */,
+				907488EB1BFC14D3005D0E0E /* AssetsLibrary.framework */,
 				90DB832E1BA3DC05005CBB9C /* opencv2.framework */,
 				90DB83051BA3D54C005CBB9C /* ImageStabilization */,
 				90DB831F1BA3D54C005CBB9C /* ImageStabilizationTests */,
@@ -108,6 +119,8 @@
 				90DB83131BA3D54C005CBB9C /* Images.xcassets */,
 				90DB83151BA3D54C005CBB9C /* LaunchScreen.xib */,
 				90DB83061BA3D54C005CBB9C /* Supporting Files */,
+				907488EF1BFC1A93005D0E0E /* GIFMaker.h */,
+				907488F01BFC1A93005D0E0E /* GIFMaker.m */,
 			);
 			path = ImageStabilization;
 			sourceTree = "<group>";
@@ -257,6 +270,7 @@
 				90DB830F1BA3D54C005CBB9C /* ViewController.mm in Sources */,
 				90DB83391BA3F304005CBB9C /* FeatureExtractor.mm in Sources */,
 				90DB830C1BA3D54C005CBB9C /* AppDelegate.m in Sources */,
+				907488F11BFC1A93005D0E0E /* GIFMaker.m in Sources */,
 				904B15501BD4E4C900E99294 /* ImageStabilizerWrapper.mm in Sources */,
 				90DB833C1BA3F371005CBB9C /* OpenCVUtils.mm in Sources */,
 				900008AF1BB2427900D3BEC3 /* ImageStabilizer.mm in Sources */,
@@ -388,6 +402,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -407,6 +423,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

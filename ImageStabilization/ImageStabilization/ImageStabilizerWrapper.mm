@@ -34,6 +34,10 @@
     }
 }
 
+-(NSArray*) getOpticalFlowImages:(NSArray *)originalImages{
+    return [_stabilizer opticalFlowImageList:originalImages];
+}
+
 -(BOOL) isStabilizerEnabled{
     return [_stabilizer isEnabled];
 }

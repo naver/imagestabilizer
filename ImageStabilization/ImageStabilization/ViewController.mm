@@ -10,6 +10,8 @@
 #import "FeatureExtractor.h"
 #import "ImageStabilizer.h"
 #import "ImageStabilizerWrapper.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "GIFMaker.h"
 
 
 typedef NS_ENUM(NSInteger, DataSet){
@@ -33,7 +35,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     DATASET_18 = 17
 };
 
-#define DEFAULT_DATASET DATASET_18
+#define DEFAULT_DATASET DATASET_3
 #define REPRESENTING_FEATURE_PIXEL_SIZE 10
 #define TIMER_INIT_INTERVAL 0.2
 #define END_OF_DATASET DATASET_18
@@ -152,7 +154,7 @@ typedef NS_ENUM(NSInteger, DataSet){
     
     for(int i  = 0; i < [result count]; i++){
         [self.resultImages addObject:[result objectAtIndex:i]];
-        NSLog(@"Image Size : %lf %lf", [self.resultImages[0] size].width, [self.resultImages[0] size].height);
+//        NSLog(@"Image Size : %lf %lf", [self.resultImages[0] size].width, [self.resultImages[0] size].height);
     }
     
     _showResults = YES;
@@ -168,6 +170,54 @@ typedef NS_ENUM(NSInteger, DataSet){
     [self.stabilizer compareExtractor:targetImages];
     
 }
+
+- (IBAction)useOpticalFlow:(id)sender {
+    NSLog(@"Use Optical Flow");
+
+    _showResults = NO;
+    [self.resultImages removeAllObjects];
+    
+    NSMutableArray* targetImages = [NSMutableArray array];
+    
+    for(int i = 0; i < [self.images count]; i++){
+        [targetImages addObject:[UIImage imageNamed:self.images[i]]];
+    }
+    
+    NSArray* result = [self.stabilizerWrapper getOpticalFlowImages:targetImages];
+    
+    for(int i  = 0; i < [result count]; i++){
+        [self.resultImages addObject:[result objectAtIndex:i]];
+    }
+    
+    _showResults = YES;
+}
+
+- (IBAction)saveToGIFClicked:(id)sender {
+    NSLog(@"Save to GIF");
+
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+
+    NSMutableArray* originalImages = [NSMutableArray array];
+    for( NSString* fileName in self.images){
+        [originalImages addObject:[UIImage imageNamed:fileName]];
+    }
+    
+    NSData* data = [GIFMaker saveGifWithImageList:originalImages withDelay:0.2];
+    
+    __weak typeof(self) weakSelf = self;
+    [library writeImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
+        if( [weakSelf.resultImages count] > 0){
+            NSData* data2 = [GIFMaker saveGifWithImageList:[NSMutableArray arrayWithArray:weakSelf.resultImages] withDelay:0.2];
+            [library writeImageDataToSavedPhotosAlbum:data2 metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
+                NSLog(@"Save Finished");
+            }];
+        }else{
+            NSLog(@"Save Finished");
+        }
+    }];
+}
+
+
 
 -(void) timerTick{
     

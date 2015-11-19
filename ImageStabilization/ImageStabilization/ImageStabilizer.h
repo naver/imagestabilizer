@@ -24,6 +24,7 @@
 -(UIImage*) stabilizeImage:(UIImage*)targetImage;
 -(NSArray*) stabilizedWithImageList:(NSArray *)images;
 -(NSArray*) stabilizedWithPrevResult:(NSArray *)images;
+-(NSArray*) opticalFlowImageList:(NSArray *)images;
 -(void) compareExtractor:(NSArray*)images;
 -(void) resetStabilizer;
 @end

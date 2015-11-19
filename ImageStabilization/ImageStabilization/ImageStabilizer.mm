@@ -12,6 +12,44 @@
 using namespace std;
 using namespace cv;
 
+const int HORIZONTAL_BORDER_CROP = 20;
+struct Trajectory
+{
+    Trajectory() {}
+    Trajectory(double _x, double _y, double _a) {
+        x = _x;
+        y = _y;
+        a = _a;
+    }
+    // "+"
+    friend Trajectory operator+(const Trajectory &c1,const Trajectory  &c2){
+        return Trajectory(c1.x+c2.x,c1.y+c2.y,c1.a+c2.a);
+    }
+    //"-"
+    friend Trajectory operator-(const Trajectory &c1,const Trajectory  &c2){
+        return Trajectory(c1.x-c2.x,c1.y-c2.y,c1.a-c2.a);
+    }
+    //"*"
+    friend Trajectory operator*(const Trajectory &c1,const Trajectory  &c2){
+        return Trajectory(c1.x*c2.x,c1.y*c2.y,c1.a*c2.a);
+    }
+    //"/"
+    friend Trajectory operator/(const Trajectory &c1,const Trajectory  &c2){
+        return Trajectory(c1.x/c2.x,c1.y/c2.y,c1.a/c2.a);
+    }
+    //"="
+    Trajectory operator =(const Trajectory &rx){
+        x = rx.x;
+        y = rx.y;
+        a = rx.a;
+        return Trajectory(x,y,a);
+    }
+    
+    double x;
+    double y;
+    double a; // angle
+};
+
 @interface ImageStabilizer()
 @property(nonatomic) Mat graySourceImage;
 @property(nonatomic) Mat sourceImageMat;
@@ -768,4 +806,184 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
     }
     NSLog(@"FAST END");
 }
+
+
+-(NSArray *) opticalFlowImageList:(NSArray *)images{
+    int numOfImages = [images count] ;
+    
+    vector<Mat> resultMats;
+    Mat prev_grey;
+    Mat prev;
+    vector <Point2f> prev_corner;
+    vector <Point2f> cur_corner;
+    Mat last_T;
+    
+    // Accumulated frame to frame transform
+    double a = 0;
+    double x = 0;
+    double y = 0;
+
+    Trajectory X;//posteriori state estimate
+    Trajectory	X_;//priori estimate
+    Trajectory P;// posteriori estimate error covariance
+    Trajectory P_;// priori estimate error covariance
+    Trajectory K;//gain
+    Trajectory	z;//actual measurement
+    double pstd = 4e-3;//can be changed
+    double cstd = 0.25;//can be changed
+    Trajectory Q(pstd,pstd,pstd);// process noise covariance
+    Trajectory R(cstd,cstd,cstd);// measurement noise covariance
+    
+    for(int i =0 ; i < numOfImages; i++){
+        Mat targetImageMat = [OpenCVUtils cvMatFromUIImage:images[i]];
+        Mat grayImageMat;
+        cvtColor(targetImageMat, grayImageMat, CV_BGR2GRAY);
+
+
+        if( i == 0){
+            goodFeaturesToTrack(grayImageMat, cur_corner, 200, 0.01, 30);
+            Mat resultImageMat;
+            cvtColor(grayImageMat, resultImageMat, CV_GRAY2BGRA);
+//            resultMats.push_back(resultImageMat);
+//            
+//            for(int i =0 ; i < cur_corner.size(); i++){
+//                Point2f point = cur_corner[i];
+//                [OpenCVUtils setPixelColor:resultImageMat posX:point.x posY:point.y size:10 color:[UIColor redColor]];
+//            }
+
+            // intial guesses
+            X = Trajectory(0,0,0); //Initial estimate,  set 0
+            P =Trajectory(1,1,1); //set error variance,set 1
+            
+            Mat cur2 = targetImageMat.clone();
+            
+            int vert_border = HORIZONTAL_BORDER_CROP * targetImageMat.rows / targetImageMat.cols;
+            
+            cur2 = cur2(Range(vert_border, cur2.rows-vert_border), Range(HORIZONTAL_BORDER_CROP, cur2.cols-HORIZONTAL_BORDER_CROP));
+            
+            // Resize cur2 back to cur size, for better side by side comparison
+            resize(cur2, cur2, targetImageMat.size());
+            
+            resultMats.push_back(cur2);
+
+            
+        }else{
+            vector <uchar> status;
+            vector <float> err;
+            vector <Point2f> prev_corner2, cur_corner2;
+            
+            goodFeaturesToTrack(grayImageMat, cur_corner, 200, 0.01, 30);
+            calcOpticalFlowPyrLK(prev_grey, grayImageMat, prev_corner, cur_corner, status, err);
+
+            // weed out bad matches
+            for(size_t i=0; i < status.size(); i++) {
+                if(status[i]) {
+                    double res = cv::norm(prev_corner[i]-cur_corner[i]);
+//                    NSLog(@"%lf",res);
+                    if(res <= 50.0){
+                        prev_corner2.push_back(prev_corner[i]);
+                        cur_corner2.push_back(cur_corner[i]);
+                    }
+
+                }
+            }
+            
+//            Mat resultImageMat;
+//            cvtColor(grayImageMat, resultImageMat, CV_GRAY2BGRA);
+//            resultMats.push_back(resultImageMat);
+//            
+//            for(int i =0 ; i < cur_corner2.size(); i++){
+//                Point2f point1 = prev_corner2[i];
+//                Point2f point2 = cur_corner2[i];
+//                line(resultImageMat, point1, point2, Scalar(255,0,0),5);
+//            }
+            
+            // translation + rotation only
+            Mat T = estimateRigidTransform(prev_corner2, cur_corner2, false); // false = rigid transform, no scaling/shearing
+            
+            // in rare cases no transform is found. We'll just use the last known good transform.
+            if(T.data == NULL) {
+                last_T.copyTo(T);
+            }
+            
+            T.copyTo(last_T);
+            
+            // decompose T
+            double dx = T.at<double>(0,2);
+            double dy = T.at<double>(1,2);
+            double da = atan2(T.at<double>(1,0), T.at<double>(0,0));
+            //
+            //prev_to_cur_transform.push_back(TransformParam(dx, dy, da));
+            NSLog(@"dx : %lf dy : %lf da : %lf", dx, dy, da);
+
+            // Accumulated frame to frame transform
+            x += dx;
+            y += dy;
+            a += da;
+            
+            z = Trajectory(x,y,a);
+            
+            //time update（prediction）
+            X_ = X; //X_(k) = X(k-1);
+            P_ = P+Q; //P_(k) = P(k-1)+Q;
+            // measurement update（correction）
+            K = P_/( P_+R ); //gain;K(k) = P_(k)/( P_(k)+R );
+            X = X_+K*(z-X_); //z-X_ is residual,X(k) = X_(k)+K(k)*(z(k)-X_(k));
+            P = (Trajectory(1,1,1)-K)*P_; //P(k) = (1-K(k))*P_(k);
+            
+            NSLog(@"Kalman Filter x : %lf, y : %lf, a : %lf", X.x, X.y, X.a);
+            
+            // target - current
+            double diff_x = X.x - x;//
+            double diff_y = X.y - y;
+            double diff_a = X.a - a;
+            
+            dx = dx + diff_x;
+            dy = dy + diff_y;
+            da = da + diff_a;
+            
+            T.at<double>(0,0) = cos(da);
+            T.at<double>(0,1) = -sin(da);
+            T.at<double>(1,0) = sin(da);
+            T.at<double>(1,1) = cos(da);
+            
+            T.at<double>(0,2) = dx;
+            T.at<double>(1,2) = dy;
+            
+            Mat cur2;
+            
+            warpAffine(prev, cur2, T, targetImageMat.size());
+            
+            int vert_border = HORIZONTAL_BORDER_CROP * prev.rows / prev.cols;
+            
+            cur2 = cur2(Range(vert_border, cur2.rows-vert_border), Range(HORIZONTAL_BORDER_CROP, cur2.cols-HORIZONTAL_BORDER_CROP));
+            
+            // Resize cur2 back to cur size, for better side by side comparison
+            resize(cur2, cur2, targetImageMat.size());
+            
+            resultMats.push_back(cur2);
+            
+//            // Now draw the original and stablised side by side for coolness
+//            Mat canvas = Mat::zeros(targetImageMat.rows, targetImageMat.cols*2+10, targetImageMat.type());
+//            
+//            prev.copyTo(canvas(Range::all(), Range(0, cur2.cols)));
+//            cur2.copyTo(canvas(Range::all(), Range(cur2.cols+10, cur2.cols*2+10)));
+//            
+//            resultMats.push_back(canvas);
+        }
+        
+        prev_corner = cur_corner;
+        prev_grey = grayImageMat;
+        prev = targetImageMat.clone();
+    }
+
+    NSMutableArray* results = [NSMutableArray array];
+    for( int i = 0; i < numOfImages; i++){
+        UIImage* resultImage = [OpenCVUtils UIImageFromCVMat:resultMats[i]];
+        [results addObject:resultImage];
+    }
+    
+    return results;
+}
+
 @end
