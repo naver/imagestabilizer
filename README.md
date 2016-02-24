@@ -44,8 +44,8 @@ public ArrayList<Bitmap> stabilizedImages(ArrayList<Bitmap> originals);
 ```
 
 ## Limitation
-This program use OpenCV library.
-It is not use GPU in IOS. it is obviously more slower than library that it use GPU.
+This program is based on OpenCV library.
+It doesn't use GPU in IOS. it is obviously more slower than library that it uses GPU.
 So I want to improve this code to use GPU like GPUImage.
 
 ## References
