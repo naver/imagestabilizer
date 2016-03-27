@@ -485,7 +485,9 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
         NSMutableArray* cropAreas = [[NSMutableArray alloc] init];
         
         for( int i = 1; i < numOfImages; i++){
-            Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
+//            Mat R = estimateRigidTransform(resultFeature[i], resultFeature[i-1], true);
+            Mat R = estimateRigidTransform(resultFeature[i], resultFeature[0], true);
+
             //        Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
 //            Mat R = findHomography(resultFeature[i], resultFeature[i-1]);
             
@@ -516,11 +518,11 @@ bool isInliner(std::vector< std::vector<DMatch> >& nn_matches, int queryIdx){
 //            mask.setTo(1);
 //            [OpenCVUtils removeEdge:mask edge:1];
             
-            if(i==1){
+//            if(i==1){
                 prevH = H;
-            }else{
-                prevH = prevH*H;
-            }
+//            }else{
+//                prevH = prevH*H;
+//            }
             
             Mat* pMat = new Mat(3,3,CV_64F);
             pMat->at<double>(0,0) = prevH.at<double>(0,0);
